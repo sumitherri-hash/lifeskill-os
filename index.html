@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeSkill OS</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #050816;
+    color: white;
+}
+
+header {
+    padding: 22px;
+    text-align: center;
+    border-bottom: 1px solid #20263d;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.tagline {
+    color: #9aa4c7;
+    margin-top: 6px;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+.hero {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.hero h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    color: #aab2cc;
+    font-size: 18px;
+}
+
+input {
+    width: 100%;
+    padding: 17px;
+    margin-top: 20px;
+    border-radius: 12px;
+    border: 1px solid #303852;
+    background: #10162a;
+    color: white;
+    font-size: 16px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #050816;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+.card {
+    background: #0d1326;
+    border: 1px solid #252d48;
+    border-radius: 18px;
+    padding: 25px;
+    margin-top: 25px;
+}
+
+.hidden {
+    display: none;
+}
+
+.mission {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.vehicle-area {
+    height: 180px;
+    background: #070b18;
+    border-radius: 15px;
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.road {
+    position: absolute;
+    bottom: 35px;
+    width: 100%;
+    height: 5px;
+    background: #555;
+}
+
+.car {
+    position: absolute;
+    bottom: 45px;
+    left: 10px;
+    font-size: 40px;
+    transition: left 1s linear;
+}
+
+.slider {
+    width: 100%;
+}
+
+.result {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+.progress {
+    margin-top: 20px;
+    height: 12px;
+    background: #20263d;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 25%;
+    height: 100%;
+    background: white;
+}
+
+footer {
+    text-align: center;
+    color: #69718d;
+    padding: 40px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">⚡ LifeSkill OS</div>
+    <div class="tagline">Don't just learn it. Experience it.</div>
+</header>
+
+<div class="container">
+
+    <section class="hero">
+
+        <h1>What do you want to learn?</h1>
+
+        <p>
+            LifeSkill OS transforms your goal into an interactive experience.
+        </p>
+
+        <input
+            id="goal"
+            placeholder="Example: I want to understand acceleration"
+        >
+
+        <button onclick="startLearning()">
+            🚀 Start Learning
+        </button>
+
+    </section>
+
+
+    <section id="experience" class="card hidden">
+
+        <div class="mission">
+            🎯 Mission Generated
+        </div>
+
+        <p id="goalText"></p>
+
+        <hr>
+
+        <h2>🚗 Motion Lab</h2>
+
+        <p>
+            Control the acceleration of the vehicle.
+            Your mission is to reach the destination.
+        </p>
+
+        <div class="vehicle-area">
+
+            <div class="road"></div>
+
+            <div id="car" class="car">
+                🚗
+            </div>
+
+        </div>
+
+        <label>
+            Acceleration
+        </label>
+
+        <input
+            id="acceleration"
+            class="slider"
+            type="range"
+            min="1"
+            max="10"
+            value="5"
+            oninput="updateAcceleration()"
+        >
+
+        <p>
+            Acceleration:
+            <strong id="accValue">5</strong>
+        </p>
+
+        <button onclick="runMission()">
+            ▶ Run Mission
+        </button>
+
+        <div id="result" class="result"></div>
+
+        <div class="progress">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+
+    </section>
+
+</div>
+
+<footer>
+    LifeSkill OS Prototype v0.1
+</footer>
+
+
+<script>
+
+function startLearning() {
+
+    const goal = document.getElementById("goal").value;
+
+    if (goal.trim() === "") {
+        alert("Tell LifeSkill OS what you want to learn.");
+        return;
+    }
+
+    document.getElementById("goalText").innerHTML =
+        "Your goal: <strong>" + goal + "</strong>";
+
+    document.getElementById("experience")
+        .classList.remove("hidden");
+
+    window.scrollTo({
+        top: document.getElementById("experience").offsetTop,
+        behavior: "smooth"
+    });
+}
+
+
+function updateAcceleration() {
+
+    const value =
+        document.getElementById("acceleration").value;
+
+    document.getElementById("accValue")
+        .innerText = value;
+}
+
+
+function runMission() {
+
+    const acceleration =
+        Number(document.getElementById("acceleration").value);
+
+    const car =
+        document.getElementById("car");
+
+    const progress =
+        document.getElementById("progressBar");
+
+    const result =
+        document.getElementById("result");
+
+    const distance =
+        acceleration * 8;
+
+    car.style.left =
+        Math.min(distance, 85) + "%";
+
+    if (acceleration >= 7) {
+
+        result.innerHTML =
+            "🔥 Excellent! Higher acceleration changes the vehicle's velocity faster. You are beginning to understand the concept.";
+
+        progress.style.width = "75%";
+
+    } else if (acceleration >= 4) {
+
+        result.innerHTML =
+            "🧠 Good attempt. Try increasing acceleration and observe what changes.";
+
+        progress.style.width = "50%";
+
+    } else {
+
+        result.innerHTML =
+            "💡 Experiment again. What happens when you increase acceleration?";
+
+        progress.style.width = "25%";
+    }
+}
+
+</script>
+
+</body>
+</html>
