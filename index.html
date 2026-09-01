@@ -3,327 +3,870 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LifeSkill OS</title>
+<title>LifeSkill OS — 3D Motion Lab</title>
 
 <style>
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #050816;
-    color: white;
+  margin: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: #050816;
+  color: white;
 }
 
-header {
-    padding: 22px;
-    text-align: center;
-    border-bottom: 1px solid #20263d;
+#ui {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.header {
+  padding: 18px;
+  background: rgba(5,8,22,.82);
+  backdrop-filter: blur(10px);
 }
 
 .logo {
-    font-size: 28px;
-    font-weight: bold;
+  font-size: 22px;
+  font-weight: bold;
 }
 
-.tagline {
-    color: #9aa4c7;
-    margin-top: 6px;
+.subtitle {
+  color: #aab2cc;
+  font-size: 13px;
+  margin-top: 4px;
 }
 
-.container {
-    max-width: 900px;
-    margin: auto;
-    padding: 30px 20px;
-}
-
-.hero {
-    text-align: center;
-    margin: 30px 0;
-}
-
-.hero h1 {
-    font-size: 42px;
-    margin-bottom: 10px;
-}
-
-.hero p {
-    color: #aab2cc;
-    font-size: 18px;
-}
-
-input {
-    width: 100%;
-    padding: 17px;
-    margin-top: 20px;
-    border-radius: 12px;
-    border: 1px solid #303852;
-    background: #10162a;
-    color: white;
-    font-size: 16px;
-}
-
-button {
-    margin-top: 15px;
-    padding: 15px 25px;
-    border: none;
-    border-radius: 12px;
-    background: #ffffff;
-    color: #050816;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-button:hover {
-    opacity: 0.85;
-}
-
-.card {
-    background: #0d1326;
-    border: 1px solid #252d48;
-    border-radius: 18px;
-    padding: 25px;
-    margin-top: 25px;
-}
-
-.hidden {
-    display: none;
+.panel {
+  pointer-events: auto;
+  position: fixed;
+  left: 15px;
+  bottom: 15px;
+  width: min(360px, calc(100% - 30px));
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(8,13,30,.88);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.12);
 }
 
 .mission {
-    font-size: 22px;
-    font-weight: bold;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
 }
 
-.vehicle-area {
-    height: 180px;
-    background: #070b18;
-    border-radius: 15px;
-    margin-top: 20px;
-    position: relative;
-    overflow: hidden;
+.info {
+  color: #b5bdd5;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
-.road {
-    position: absolute;
-    bottom: 35px;
-    width: 100%;
-    height: 5px;
-    background: #555;
+.stats {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
 }
 
-.car {
-    position: absolute;
-    bottom: 45px;
-    left: 10px;
-    font-size: 40px;
-    transition: left 1s linear;
+.stat {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.07);
+  text-align: center;
 }
 
-.slider {
-    width: 100%;
+.stat small {
+  display: block;
+  color: #9da6c0;
+  margin-bottom: 5px;
 }
 
-.result {
-    margin-top: 20px;
-    font-size: 18px;
+.stat strong {
+  font-size: 20px;
 }
 
-.progress {
-    margin-top: 20px;
-    height: 12px;
-    background: #20263d;
-    border-radius: 10px;
-    overflow: hidden;
+label {
+  display: block;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #b5bdd5;
 }
 
-.progress-bar {
-    width: 25%;
-    height: 100%;
-    background: white;
+input[type="range"] {
+  width: 100%;
 }
 
-footer {
-    text-align: center;
-    color: #69718d;
-    padding: 40px;
+button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 13px;
+  border: 0;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#message {
+  margin-top: 12px;
+  line-height: 1.4;
+  font-size: 14px;
+}
+
+#loading {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #050816;
+  font-size: 22px;
 }
 </style>
 </head>
 
 <body>
 
-<header>
+<div id="loading">
+  ⚡ Loading LifeSkill OS...
+</div>
+
+<div id="ui">
+
+  <div class="header">
     <div class="logo">⚡ LifeSkill OS</div>
-    <div class="tagline">Don't just learn it. Experience it.</div>
-</header>
+    <div class="subtitle">Don't just learn it. Enter it.</div>
+  </div>
 
-<div class="container">
+  <div class="panel">
 
-    <section class="hero">
+    <div class="mission">
+      🎯 Mission 01 — Master Motion
+    </div>
 
-        <h1>What do you want to learn?</h1>
+    <div class="info">
+      Reach the checkpoint while experimenting
+      with acceleration. Watch how your vehicle's
+      motion changes.
+    </div>
 
-        <p>
-            LifeSkill OS transforms your goal into an interactive experience.
-        </p>
+    <div class="stats">
 
-        <input
-            id="goal"
-            placeholder="Example: I want to understand acceleration"
-        >
+      <div class="stat">
+        <small>Speed</small>
+        <strong><span id="speed">0</span> m/s</strong>
+      </div>
 
-        <button onclick="startLearning()">
-            🚀 Start Learning
-        </button>
+      <div class="stat">
+        <small>Acceleration</small>
+        <strong><span id="acc">5</span></strong>
+      </div>
 
-    </section>
+    </div>
 
+    <label>
+      Control Acceleration
+    </label>
 
-    <section id="experience" class="card hidden">
+    <input
+      id="acceleration"
+      type="range"
+      min="0"
+      max="10"
+      value="5"
+      step="0.1"
+    >
 
-        <div class="mission">
-            🎯 Mission Generated
-        </div>
+    <button id="start">
+      🚀 START MISSION
+    </button>
 
-        <p id="goalText"></p>
+    <div id="message">
+      Experiment with the controls and discover what happens.
+    </div>
 
-        <hr>
-
-        <h2>🚗 Motion Lab</h2>
-
-        <p>
-            Control the acceleration of the vehicle.
-            Your mission is to reach the destination.
-        </p>
-
-        <div class="vehicle-area">
-
-            <div class="road"></div>
-
-            <div id="car" class="car">
-                🚗
-            </div>
-
-        </div>
-
-        <label>
-            Acceleration
-        </label>
-
-        <input
-            id="acceleration"
-            class="slider"
-            type="range"
-            min="1"
-            max="10"
-            value="5"
-            oninput="updateAcceleration()"
-        >
-
-        <p>
-            Acceleration:
-            <strong id="accValue">5</strong>
-        </p>
-
-        <button onclick="runMission()">
-            ▶ Run Mission
-        </button>
-
-        <div id="result" class="result"></div>
-
-        <div class="progress">
-            <div id="progressBar" class="progress-bar"></div>
-        </div>
-
-    </section>
+  </div>
 
 </div>
 
-<footer>
-    LifeSkill OS Prototype v0.1
-</footer>
+<script type="module">
+
+import * as THREE from
+'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+
+import { OrbitControls } from
+'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
 
 
-<script>
+/* =========================
+   SCENE
+========================= */
 
-function startLearning() {
+const scene = new THREE.Scene();
 
-    const goal = document.getElementById("goal").value;
+scene.background = new THREE.Color(0x07101f);
 
-    if (goal.trim() === "") {
-        alert("Tell LifeSkill OS what you want to learn.");
-        return;
-    }
+scene.fog = new THREE.Fog(
+  0x07101f,
+  30,
+  180
+);
 
-    document.getElementById("goalText").innerHTML =
-        "Your goal: <strong>" + goal + "</strong>";
 
-    document.getElementById("experience")
-        .classList.remove("hidden");
+/* =========================
+   CAMERA
+========================= */
 
-    window.scrollTo({
-        top: document.getElementById("experience").offsetTop,
-        behavior: "smooth"
+const camera = new THREE.PerspectiveCamera(
+  60,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  500
+);
+
+camera.position.set(
+  8,
+  6,
+  12
+);
+
+
+/* =========================
+   RENDERER
+========================= */
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: true
+});
+
+renderer.setPixelRatio(
+  Math.min(window.devicePixelRatio, 2)
+);
+
+renderer.setSize(
+  window.innerWidth,
+  window.innerHeight
+);
+
+renderer.shadowMap.enabled = true;
+
+document.body.appendChild(
+  renderer.domElement
+);
+
+
+/* =========================
+   CAMERA CONTROLS
+========================= */
+
+const controls = new OrbitControls(
+  camera,
+  renderer.domElement
+);
+
+controls.enableDamping = true;
+controls.target.set(0, 0, -20);
+
+
+/* =========================
+   LIGHTING
+========================= */
+
+const ambient = new THREE.HemisphereLight(
+  0xffffff,
+  0x223344,
+  2
+);
+
+scene.add(ambient);
+
+
+const sun = new THREE.DirectionalLight(
+  0xffffff,
+  3
+);
+
+sun.position.set(
+  20,
+  30,
+  10
+);
+
+sun.castShadow = true;
+
+scene.add(sun);
+
+
+/* =========================
+   GROUND
+========================= */
+
+const groundGeometry =
+  new THREE.PlaneGeometry(
+    300,
+    300
+  );
+
+const groundMaterial =
+  new THREE.MeshStandardMaterial({
+    color: 0x162019
+  });
+
+const ground =
+  new THREE.Mesh(
+    groundGeometry,
+    groundMaterial
+  );
+
+ground.rotation.x =
+  -Math.PI / 2;
+
+ground.receiveShadow = true;
+
+scene.add(ground);
+
+
+/* =========================
+   ROAD
+========================= */
+
+const roadGeometry =
+  new THREE.PlaneGeometry(
+    14,
+    220
+  );
+
+const roadMaterial =
+  new THREE.MeshStandardMaterial({
+    color: 0x171a20
+  });
+
+const road =
+  new THREE.Mesh(
+    roadGeometry,
+    roadMaterial
+  );
+
+road.rotation.x =
+  -Math.PI / 2;
+
+road.position.y =
+  0.01;
+
+road.position.z =
+  -80;
+
+scene.add(road);
+
+
+/* =========================
+   ROAD LINES
+========================= */
+
+for (
+  let z = 20;
+  z > -190;
+  z -= 8
+) {
+
+  const lineGeometry =
+    new THREE.BoxGeometry(
+      0.25,
+      0.03,
+      4
+    );
+
+  const lineMaterial =
+    new THREE.MeshStandardMaterial({
+      color: 0xffffff
     });
+
+  const line =
+    new THREE.Mesh(
+      lineGeometry,
+      lineMaterial
+    );
+
+  line.position.set(
+    0,
+    0.04,
+    z
+  );
+
+  scene.add(line);
 }
 
 
-function updateAcceleration() {
+/* =========================
+   CAR
+========================= */
 
-    const value =
-        document.getElementById("acceleration").value;
+const car =
+  new THREE.Group();
 
-    document.getElementById("accValue")
-        .innerText = value;
+
+/* body */
+
+const bodyGeometry =
+  new THREE.BoxGeometry(
+    2.4,
+    0.7,
+    4
+  );
+
+const bodyMaterial =
+  new THREE.MeshStandardMaterial({
+    color: 0x1677ff,
+    metalness: 0.4,
+    roughness: 0.35
+  });
+
+const body =
+  new THREE.Mesh(
+    bodyGeometry,
+    bodyMaterial
+  );
+
+body.position.y =
+  0.75;
+
+body.castShadow = true;
+
+car.add(body);
+
+
+/* cabin */
+
+const cabinGeometry =
+  new THREE.BoxGeometry(
+    1.7,
+    0.65,
+    1.8
+  );
+
+const cabinMaterial =
+  new THREE.MeshStandardMaterial({
+    color: 0x8fd3ff,
+    transparent: true,
+    opacity: 0.75
+  });
+
+const cabin =
+  new THREE.Mesh(
+    cabinGeometry,
+    cabinMaterial
+  );
+
+cabin.position.set(
+  0,
+  1.35,
+  -0.25
+);
+
+cabin.castShadow = true;
+
+car.add(cabin);
+
+
+/* wheels */
+
+const wheelGeometry =
+  new THREE.CylinderGeometry(
+    0.45,
+    0.45,
+    0.35,
+    24
+  );
+
+const wheelMaterial =
+  new THREE.MeshStandardMaterial({
+    color: 0x080808
+  });
+
+const wheelPositions = [
+  [-1.25, 0.45, 1.25],
+  [ 1.25, 0.45, 1.25],
+  [-1.25, 0.45,-1.25],
+  [ 1.25, 0.45,-1.25]
+];
+
+wheelPositions.forEach(
+  position => {
+
+    const wheel =
+      new THREE.Mesh(
+        wheelGeometry,
+        wheelMaterial
+      );
+
+    wheel.rotation.z =
+      Math.PI / 2;
+
+    wheel.position.set(
+      position[0],
+      position[1],
+      position[2]
+    );
+
+    wheel.castShadow = true;
+
+    car.add(wheel);
+  }
+);
+
+
+car.position.set(
+  0,
+  0,
+  10
+);
+
+scene.add(car);
+
+
+/* =========================
+   CHECKPOINT
+========================= */
+
+const checkpoint =
+  new THREE.Group();
+
+
+const ringGeometry =
+  new THREE.TorusGeometry(
+    5,
+    0.25,
+    16,
+    64
+  );
+
+const ringMaterial =
+  new THREE.MeshStandardMaterial({
+    color: 0xffff00,
+    emissive: 0x665500
+  });
+
+const ring =
+  new THREE.Mesh(
+    ringGeometry,
+    ringMaterial
+  );
+
+ring.rotation.y =
+  Math.PI / 2;
+
+ring.position.y =
+  4;
+
+checkpoint.add(ring);
+
+
+const pillarGeometry =
+  new THREE.BoxGeometry(
+    0.4,
+    8,
+    0.4
+  );
+
+[-5,5].forEach(x => {
+
+  const pillar =
+    new THREE.Mesh(
+      pillarGeometry,
+      ringMaterial
+    );
+
+  pillar.position.set(
+    x,
+    4,
+    0
+  );
+
+  checkpoint.add(pillar);
+
+});
+
+
+checkpoint.position.z =
+  -100;
+
+scene.add(checkpoint);
+
+
+/* =========================
+   TREES
+========================= */
+
+function createTree(x, z) {
+
+  const tree =
+    new THREE.Group();
+
+
+  const trunk =
+    new THREE.Mesh(
+      new THREE.CylinderGeometry(
+        0.3,
+        0.45,
+        3,
+        12
+      ),
+      new THREE.MeshStandardMaterial({
+        color: 0x68452d
+      })
+    );
+
+  trunk.position.y =
+    1.5;
+
+  tree.add(trunk);
+
+
+  const leaves =
+    new THREE.Mesh(
+      new THREE.SphereGeometry(
+        1.7,
+        16,
+        16
+      ),
+      new THREE.MeshStandardMaterial({
+        color: 0x237a3a
+      })
+    );
+
+  leaves.position.y =
+    3.5;
+
+  tree.add(leaves);
+
+  tree.position.set(
+    x,
+    0,
+    z
+  );
+
+  scene.add(tree);
 }
 
 
-function runMission() {
+for (
+  let z = 15;
+  z > -190;
+  z -= 15
+) {
 
-    const acceleration =
-        Number(document.getElementById("acceleration").value);
+  createTree(-11, z);
 
-    const car =
-        document.getElementById("car");
+  createTree(11, z - 6);
 
-    const progress =
-        document.getElementById("progressBar");
+}
 
-    const result =
-        document.getElementById("result");
 
-    const distance =
-        acceleration * 8;
+/* =========================
+   VARIABLES
+========================= */
 
-    car.style.left =
-        Math.min(distance, 85) + "%";
+let speed = 0;
 
-    if (acceleration >= 7) {
+let acceleration = 5;
 
-        result.innerHTML =
-            "🔥 Excellent! Higher acceleration changes the vehicle's velocity faster. You are beginning to understand the concept.";
+let running = false;
 
-        progress.style.width = "75%";
+let lastTime =
+  performance.now();
 
-    } else if (acceleration >= 4) {
 
-        result.innerHTML =
-            "🧠 Good attempt. Try increasing acceleration and observe what changes.";
+/* =========================
+   UI
+========================= */
 
-        progress.style.width = "50%";
+const accelerationSlider =
+  document.getElementById(
+    "acceleration"
+  );
 
-    } else {
+const accelerationText =
+  document.getElementById(
+    "acc"
+  );
 
-        result.innerHTML =
-            "💡 Experiment again. What happens when you increase acceleration?";
+const speedText =
+  document.getElementById(
+    "speed"
+  );
 
-        progress.style.width = "25%";
+const message =
+  document.getElementById(
+    "message"
+  );
+
+const startButton =
+  document.getElementById(
+    "start"
+  );
+
+
+accelerationSlider.addEventListener(
+  "input",
+  () => {
+
+    acceleration =
+      Number(
+        accelerationSlider.value
+      );
+
+    accelerationText.textContent =
+      acceleration.toFixed(1);
+
+  }
+);
+
+
+/* =========================
+   START MISSION
+========================= */
+
+startButton.addEventListener(
+  "click",
+  () => {
+
+    running = true;
+
+    speed = 0;
+
+    car.position.z = 10;
+
+    message.innerHTML =
+      "🚀 Mission started! Experiment with acceleration and observe the vehicle.";
+
+    startButton.textContent =
+      "🔄 RESTART MISSION";
+
+  }
+);
+
+
+/* =========================
+   ANIMATION
+========================= */
+
+function animate() {
+
+  requestAnimationFrame(
+    animate
+  );
+
+  const now =
+    performance.now();
+
+  const delta =
+    Math.min(
+      (now - lastTime) / 1000,
+      0.05
+    );
+
+  lastTime = now;
+
+
+  if (running) {
+
+    speed +=
+      acceleration * delta;
+
+    speed =
+      Math.min(
+        speed,
+        30
+      );
+
+    car.position.z -=
+      speed * delta;
+
+
+    speedText.textContent =
+      speed.toFixed(1);
+
+
+    if (
+      car.position.z <= -95
+    ) {
+
+      running = false;
+
+      message.innerHTML =
+        "🏆 Mission complete! You changed the vehicle's motion by changing acceleration. That's the concept—not just a definition.";
+
     }
+
+  }
+
+
+  /* follow car */
+
+  const targetCameraZ =
+    car.position.z + 12;
+
+  camera.position.z +=
+    (targetCameraZ -
+      camera.position.z) *
+    0.04;
+
+
+  controls.target.z =
+    car.position.z - 15;
+
+  controls.update();
+
+
+  renderer.render(
+    scene,
+    camera
+  );
+
 }
+
+
+/* =========================
+   RESIZE
+========================= */
+
+window.addEventListener(
+  "resize",
+  () => {
+
+    camera.aspect =
+      window.innerWidth /
+      window.innerHeight;
+
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(
+      window.innerWidth,
+      window.innerHeight
+    );
+
+  }
+);
+
+
+/* =========================
+   START
+========================= */
+
+document.getElementById(
+  "loading"
+).style.display =
+  "none";
+
+animate();
 
 </script>
 
