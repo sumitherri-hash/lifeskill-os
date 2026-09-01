@@ -3,301 +3,277 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LifeSkill OS — 3D Motion Lab</title>
+<title>LifeSkill OS 3D</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+body{
+margin:0;
+overflow:hidden;
+font-family:Arial,sans-serif;
+background:#050816;
+color:white
 }
 
-body {
-  margin: 0;
-  overflow: hidden;
-  font-family: Arial, sans-serif;
-  background: #050816;
-  color: white;
+#loading{
+position:fixed;
+inset:0;
+z-index:100;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#050816;
+font-size:22px
 }
 
-#ui {
-  position: fixed;
-  z-index: 10;
-  top: 0;
-  left: 0;
-  width: 100%;
-  pointer-events: none;
+#ui{
+position:fixed;
+z-index:10;
+top:0;
+left:0;
+width:100%;
+pointer-events:none
 }
 
-.header {
-  padding: 18px;
-  background: rgba(5,8,22,.82);
-  backdrop-filter: blur(10px);
+.header{
+padding:18px;
+background:rgba(5,8,22,.85)
 }
 
-.logo {
-  font-size: 22px;
-  font-weight: bold;
+.logo{
+font-size:22px;
+font-weight:bold
 }
 
-.subtitle {
-  color: #aab2cc;
-  font-size: 13px;
-  margin-top: 4px;
+.subtitle{
+color:#aab2cc;
+font-size:13px;
+margin-top:5px
 }
 
-.panel {
-  pointer-events: auto;
-  position: fixed;
-  left: 15px;
-  bottom: 15px;
-  width: min(360px, calc(100% - 30px));
-  padding: 18px;
-  border-radius: 18px;
-  background: rgba(8,13,30,.88);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,.12);
+.panel{
+pointer-events:auto;
+position:fixed;
+left:15px;
+bottom:15px;
+width:min(370px,calc(100% - 30px));
+padding:18px;
+border-radius:18px;
+background:rgba(8,13,30,.9);
+border:1px solid rgba(255,255,255,.15)
 }
 
-.mission {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 8px;
+.mission{
+font-size:18px;
+font-weight:bold;
+margin-bottom:8px
 }
 
-.info {
-  color: #b5bdd5;
-  font-size: 13px;
-  line-height: 1.5;
+.info{
+color:#b5bdd5;
+font-size:13px;
+line-height:1.5
 }
 
-.stats {
-  display: flex;
-  gap: 10px;
-  margin: 15px 0;
+.stats{
+display:flex;
+gap:10px;
+margin:15px 0
 }
 
-.stat {
-  flex: 1;
-  padding: 12px;
-  border-radius: 12px;
-  background: rgba(255,255,255,.07);
-  text-align: center;
+.stat{
+flex:1;
+padding:12px;
+border-radius:12px;
+background:rgba(255,255,255,.07);
+text-align:center
 }
 
-.stat small {
-  display: block;
-  color: #9da6c0;
-  margin-bottom: 5px;
+.stat small{
+display:block;
+color:#9da6c0;
+margin-bottom:5px
 }
 
-.stat strong {
-  font-size: 20px;
+.stat strong{
+font-size:20px
 }
 
-label {
-  display: block;
-  margin-top: 12px;
-  font-size: 13px;
-  color: #b5bdd5;
+input[type=range]{
+width:100%
 }
 
-input[type="range"] {
-  width: 100%;
+button{
+width:100%;
+margin-top:12px;
+padding:14px;
+border:0;
+border-radius:12px;
+font-weight:bold;
+cursor:pointer
 }
 
-button {
-  width: 100%;
-  margin-top: 12px;
-  padding: 13px;
-  border: 0;
-  border-radius: 12px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-#message {
-  margin-top: 12px;
-  line-height: 1.4;
-  font-size: 14px;
-}
-
-#loading {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #050816;
-  font-size: 22px;
+#message{
+margin-top:12px;
+font-size:14px;
+line-height:1.4
 }
 </style>
 </head>
 
 <body>
 
-<div id="loading">
-  ⚡ Loading LifeSkill OS...
-</div>
+<div id="loading">⚡ Loading LifeSkill OS...</div>
 
 <div id="ui">
 
-  <div class="header">
-    <div class="logo">⚡ LifeSkill OS</div>
-    <div class="subtitle">Don't just learn it. Enter it.</div>
-  </div>
+<div class="header">
+<div class="logo">⚡ LifeSkill OS</div>
+<div class="subtitle">Don't just learn it. Enter it.</div>
+</div>
 
-  <div class="panel">
+<div class="panel">
 
-    <div class="mission">
-      🎯 Mission 01 — Master Motion
-    </div>
+<div class="mission">
+🎯 Mission 01 — Master Motion
+</div>
 
-    <div class="info">
-      Reach the checkpoint while experimenting
-      with acceleration. Watch how your vehicle's
-      motion changes.
-    </div>
+<div class="info">
+Control the vehicle and discover how acceleration changes motion.
+</div>
 
-    <div class="stats">
+<div class="stats">
 
-      <div class="stat">
-        <small>Speed</small>
-        <strong><span id="speed">0</span> m/s</strong>
-      </div>
+<div class="stat">
+<small>Speed</small>
+<strong><span id="speed">0</span> m/s</strong>
+</div>
 
-      <div class="stat">
-        <small>Acceleration</small>
-        <strong><span id="acc">5</span></strong>
-      </div>
-
-    </div>
-
-    <label>
-      Control Acceleration
-    </label>
-
-    <input
-      id="acceleration"
-      type="range"
-      min="0"
-      max="10"
-      value="5"
-      step="0.1"
-    >
-
-    <button id="start">
-      🚀 START MISSION
-    </button>
-
-    <div id="message">
-      Experiment with the controls and discover what happens.
-    </div>
-
-  </div>
+<div class="stat">
+<small>Acceleration</small>
+<strong><span id="acc">5</span></strong>
+</div>
 
 </div>
 
-<script type="module">
+<label>Acceleration</label>
 
-import * as THREE from
-'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+<input
+id="acceleration"
+type="range"
+min="0"
+max="10"
+value="5"
+step="0.1">
 
-import { OrbitControls } from
-'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+<button id="start">
+🚀 START MISSION
+</button>
+
+<div id="message">
+Experiment with acceleration and observe what happens.
+</div>
+
+</div>
+</div>
 
 
-/* =========================
-   SCENE
-========================= */
+<!-- THREE.JS -->
 
-const scene = new THREE.Scene();
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
-scene.background = new THREE.Color(0x07101f);
 
-scene.fog = new THREE.Fog(
-  0x07101f,
-  30,
-  180
+<script>
+
+window.addEventListener("load", function(){
+
+if(typeof THREE === "undefined"){
+
+document.getElementById("loading").innerHTML =
+"❌ 3D engine could not load.<br><small>Check your internet connection.</small>";
+
+return;
+
+}
+
+
+/* SCENE */
+
+const scene =
+new THREE.Scene();
+
+scene.background =
+new THREE.Color(0x07101f);
+
+scene.fog =
+new THREE.Fog(
+0x07101f,
+30,
+180
 );
 
 
-/* =========================
-   CAMERA
-========================= */
+/* CAMERA */
 
-const camera = new THREE.PerspectiveCamera(
-  60,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  500
+const camera =
+new THREE.PerspectiveCamera(
+60,
+window.innerWidth /
+window.innerHeight,
+0.1,
+500
 );
 
 camera.position.set(
-  8,
-  6,
-  12
+8,6,12
 );
 
 
-/* =========================
-   RENDERER
-========================= */
+/* RENDERER */
 
-const renderer = new THREE.WebGLRenderer({
-  antialias: true
+const renderer =
+new THREE.WebGLRenderer({
+antialias:true
 });
 
 renderer.setPixelRatio(
-  Math.min(window.devicePixelRatio, 2)
+Math.min(window.devicePixelRatio,2)
 );
 
 renderer.setSize(
-  window.innerWidth,
-  window.innerHeight
+window.innerWidth,
+window.innerHeight
 );
 
-renderer.shadowMap.enabled = true;
+renderer.shadowMap.enabled =
+true;
 
 document.body.appendChild(
-  renderer.domElement
+renderer.domElement
 );
 
 
-/* =========================
-   CAMERA CONTROLS
-========================= */
+/* LIGHT */
 
-const controls = new OrbitControls(
-  camera,
-  renderer.domElement
+const light =
+new THREE.HemisphereLight(
+0xffffff,
+0x223344,
+2
 );
 
-controls.enableDamping = true;
-controls.target.set(0, 0, -20);
+scene.add(light);
 
 
-/* =========================
-   LIGHTING
-========================= */
-
-const ambient = new THREE.HemisphereLight(
-  0xffffff,
-  0x223344,
-  2
-);
-
-scene.add(ambient);
-
-
-const sun = new THREE.DirectionalLight(
-  0xffffff,
-  3
+const sun =
+new THREE.DirectionalLight(
+0xffffff,
+3
 );
 
 sun.position.set(
-  20,
-  30,
-  10
+20,30,10
 );
 
 sun.castShadow = true;
@@ -305,568 +281,449 @@ sun.castShadow = true;
 scene.add(sun);
 
 
-/* =========================
-   GROUND
-========================= */
-
-const groundGeometry =
-  new THREE.PlaneGeometry(
-    300,
-    300
-  );
-
-const groundMaterial =
-  new THREE.MeshStandardMaterial({
-    color: 0x162019
-  });
+/* GROUND */
 
 const ground =
-  new THREE.Mesh(
-    groundGeometry,
-    groundMaterial
-  );
+new THREE.Mesh(
+new THREE.PlaneGeometry(
+300,300
+),
+new THREE.MeshStandardMaterial({
+color:0x172019
+})
+);
 
 ground.rotation.x =
-  -Math.PI / 2;
-
-ground.receiveShadow = true;
+-Math.PI/2;
 
 scene.add(ground);
 
 
-/* =========================
-   ROAD
-========================= */
-
-const roadGeometry =
-  new THREE.PlaneGeometry(
-    14,
-    220
-  );
-
-const roadMaterial =
-  new THREE.MeshStandardMaterial({
-    color: 0x171a20
-  });
+/* ROAD */
 
 const road =
-  new THREE.Mesh(
-    roadGeometry,
-    roadMaterial
-  );
+new THREE.Mesh(
+new THREE.PlaneGeometry(
+14,220
+),
+new THREE.MeshStandardMaterial({
+color:0x171a20
+})
+);
 
 road.rotation.x =
-  -Math.PI / 2;
+-Math.PI/2;
 
 road.position.y =
-  0.01;
+0.01;
 
 road.position.z =
-  -80;
+-80;
 
 scene.add(road);
 
 
-/* =========================
-   ROAD LINES
-========================= */
+/* ROAD MARKINGS */
 
-for (
-  let z = 20;
-  z > -190;
-  z -= 8
-) {
+for(
+let z=20;
+z>-200;
+z-=8
+){
 
-  const lineGeometry =
-    new THREE.BoxGeometry(
-      0.25,
-      0.03,
-      4
-    );
+const line =
+new THREE.Mesh(
+new THREE.BoxGeometry(
+0.25,0.03,4
+),
+new THREE.MeshStandardMaterial({
+color:0xffffff
+})
+);
 
-  const lineMaterial =
-    new THREE.MeshStandardMaterial({
-      color: 0xffffff
-    });
+line.position.set(
+0,0.04,z
+);
 
-  const line =
-    new THREE.Mesh(
-      lineGeometry,
-      lineMaterial
-    );
+scene.add(line);
 
-  line.position.set(
-    0,
-    0.04,
-    z
-  );
-
-  scene.add(line);
 }
 
 
-/* =========================
-   CAR
-========================= */
+/* CAR */
 
 const car =
-  new THREE.Group();
+new THREE.Group();
 
-
-/* body */
-
-const bodyGeometry =
-  new THREE.BoxGeometry(
-    2.4,
-    0.7,
-    4
-  );
-
-const bodyMaterial =
-  new THREE.MeshStandardMaterial({
-    color: 0x1677ff,
-    metalness: 0.4,
-    roughness: 0.35
-  });
 
 const body =
-  new THREE.Mesh(
-    bodyGeometry,
-    bodyMaterial
-  );
+new THREE.Mesh(
+new THREE.BoxGeometry(
+2.4,0.7,4
+),
+new THREE.MeshStandardMaterial({
+color:0x1677ff,
+metalness:0.4,
+roughness:0.35
+})
+);
 
 body.position.y =
-  0.75;
-
-body.castShadow = true;
+0.75;
 
 car.add(body);
 
 
-/* cabin */
-
-const cabinGeometry =
-  new THREE.BoxGeometry(
-    1.7,
-    0.65,
-    1.8
-  );
-
-const cabinMaterial =
-  new THREE.MeshStandardMaterial({
-    color: 0x8fd3ff,
-    transparent: true,
-    opacity: 0.75
-  });
-
 const cabin =
-  new THREE.Mesh(
-    cabinGeometry,
-    cabinMaterial
-  );
-
-cabin.position.set(
-  0,
-  1.35,
-  -0.25
+new THREE.Mesh(
+new THREE.BoxGeometry(
+1.7,0.65,1.8
+),
+new THREE.MeshStandardMaterial({
+color:0x8fd3ff,
+transparent:true,
+opacity:0.75
+})
 );
 
-cabin.castShadow = true;
+cabin.position.set(
+0,1.35,-0.25
+);
 
 car.add(cabin);
 
 
-/* wheels */
+/* WHEELS */
 
 const wheelGeometry =
-  new THREE.CylinderGeometry(
-    0.45,
-    0.45,
-    0.35,
-    24
-  );
+new THREE.CylinderGeometry(
+0.45,
+0.45,
+0.35,
+24
+);
 
 const wheelMaterial =
-  new THREE.MeshStandardMaterial({
-    color: 0x080808
-  });
+new THREE.MeshStandardMaterial({
+color:0x080808
+});
 
-const wheelPositions = [
-  [-1.25, 0.45, 1.25],
-  [ 1.25, 0.45, 1.25],
-  [-1.25, 0.45,-1.25],
-  [ 1.25, 0.45,-1.25]
-];
+[
+[-1.25,0.45,1.25],
+[1.25,0.45,1.25],
+[-1.25,0.45,-1.25],
+[1.25,0.45,-1.25]
+].forEach(p=>{
 
-wheelPositions.forEach(
-  position => {
-
-    const wheel =
-      new THREE.Mesh(
-        wheelGeometry,
-        wheelMaterial
-      );
-
-    wheel.rotation.z =
-      Math.PI / 2;
-
-    wheel.position.set(
-      position[0],
-      position[1],
-      position[2]
-    );
-
-    wheel.castShadow = true;
-
-    car.add(wheel);
-  }
+const wheel =
+new THREE.Mesh(
+wheelGeometry,
+wheelMaterial
 );
+
+wheel.rotation.z =
+Math.PI/2;
+
+wheel.position.set(
+p[0],p[1],p[2]
+);
+
+car.add(wheel);
+
+});
 
 
 car.position.set(
-  0,
-  0,
-  10
+0,0,10
 );
 
 scene.add(car);
 
 
-/* =========================
-   CHECKPOINT
-========================= */
+/* CHECKPOINT */
 
 const checkpoint =
-  new THREE.Group();
+new THREE.Group();
 
-
-const ringGeometry =
-  new THREE.TorusGeometry(
-    5,
-    0.25,
-    16,
-    64
-  );
-
-const ringMaterial =
-  new THREE.MeshStandardMaterial({
-    color: 0xffff00,
-    emissive: 0x665500
-  });
 
 const ring =
-  new THREE.Mesh(
-    ringGeometry,
-    ringMaterial
-  );
+new THREE.Mesh(
+new THREE.TorusGeometry(
+5,0.25,16,64
+),
+new THREE.MeshStandardMaterial({
+color:0xffff00,
+emissive:0x665500
+})
+);
 
 ring.rotation.y =
-  Math.PI / 2;
+Math.PI/2;
 
 ring.position.y =
-  4;
+4;
 
 checkpoint.add(ring);
 
 
-const pillarGeometry =
-  new THREE.BoxGeometry(
-    0.4,
-    8,
-    0.4
-  );
+[-5,5].forEach(x=>{
 
-[-5,5].forEach(x => {
+const pillar =
+new THREE.Mesh(
+new THREE.BoxGeometry(
+0.4,8,0.4
+),
+new THREE.MeshStandardMaterial({
+color:0xffff00,
+emissive:0x665500
+})
+);
 
-  const pillar =
-    new THREE.Mesh(
-      pillarGeometry,
-      ringMaterial
-    );
+pillar.position.set(
+x,4,0
+);
 
-  pillar.position.set(
-    x,
-    4,
-    0
-  );
-
-  checkpoint.add(pillar);
+checkpoint.add(pillar);
 
 });
 
 
 checkpoint.position.z =
-  -100;
+-100;
 
 scene.add(checkpoint);
 
 
-/* =========================
-   TREES
-========================= */
+/* TREES */
 
-function createTree(x, z) {
+function tree(x,z){
 
-  const tree =
-    new THREE.Group();
+const group =
+new THREE.Group();
 
 
-  const trunk =
-    new THREE.Mesh(
-      new THREE.CylinderGeometry(
-        0.3,
-        0.45,
-        3,
-        12
-      ),
-      new THREE.MeshStandardMaterial({
-        color: 0x68452d
-      })
-    );
+const trunk =
+new THREE.Mesh(
+new THREE.CylinderGeometry(
+0.3,0.45,3,12
+),
+new THREE.MeshStandardMaterial({
+color:0x68452d
+})
+);
 
-  trunk.position.y =
-    1.5;
+trunk.position.y =
+1.5;
 
-  tree.add(trunk);
+group.add(trunk);
 
 
-  const leaves =
-    new THREE.Mesh(
-      new THREE.SphereGeometry(
-        1.7,
-        16,
-        16
-      ),
-      new THREE.MeshStandardMaterial({
-        color: 0x237a3a
-      })
-    );
+const leaves =
+new THREE.Mesh(
+new THREE.SphereGeometry(
+1.7,16,16
+),
+new THREE.MeshStandardMaterial({
+color:0x237a3a
+})
+);
 
-  leaves.position.y =
-    3.5;
+leaves.position.y =
+3.5;
 
-  tree.add(leaves);
+group.add(leaves);
 
-  tree.position.set(
-    x,
-    0,
-    z
-  );
+group.position.set(
+x,0,z
+);
 
-  scene.add(tree);
-}
-
-
-for (
-  let z = 15;
-  z > -190;
-  z -= 15
-) {
-
-  createTree(-11, z);
-
-  createTree(11, z - 6);
+scene.add(group);
 
 }
 
 
-/* =========================
-   VARIABLES
-========================= */
+for(
+let z=15;
+z>-190;
+z-=15
+){
+
+tree(-11,z);
+tree(11,z-6);
+
+}
+
+
+/* GAME */
 
 let speed = 0;
-
 let acceleration = 5;
-
 let running = false;
-
-let lastTime =
-  performance.now();
+let lastTime = performance.now();
 
 
-/* =========================
-   UI
-========================= */
-
-const accelerationSlider =
-  document.getElementById(
-    "acceleration"
-  );
-
-const accelerationText =
-  document.getElementById(
-    "acc"
-  );
+const slider =
+document.getElementById(
+"acceleration"
+);
 
 const speedText =
-  document.getElementById(
-    "speed"
-  );
+document.getElementById(
+"speed"
+);
+
+const accText =
+document.getElementById(
+"acc"
+);
 
 const message =
-  document.getElementById(
-    "message"
-  );
+document.getElementById(
+"message"
+);
 
-const startButton =
-  document.getElementById(
-    "start"
-  );
-
-
-accelerationSlider.addEventListener(
-  "input",
-  () => {
-
-    acceleration =
-      Number(
-        accelerationSlider.value
-      );
-
-    accelerationText.textContent =
-      acceleration.toFixed(1);
-
-  }
+const start =
+document.getElementById(
+"start"
 );
 
 
-/* =========================
-   START MISSION
-========================= */
+slider.addEventListener(
+"input",
+function(){
 
-startButton.addEventListener(
-  "click",
-  () => {
+acceleration =
+Number(slider.value);
 
-    running = true;
+accText.textContent =
+acceleration.toFixed(1);
 
-    speed = 0;
+});
 
-    car.position.z = 10;
 
-    message.innerHTML =
-      "🚀 Mission started! Experiment with acceleration and observe the vehicle.";
+start.addEventListener(
+"click",
+function(){
 
-    startButton.textContent =
-      "🔄 RESTART MISSION";
+running = true;
 
-  }
+speed = 0;
+
+car.position.z = 10;
+
+message.textContent =
+"🚀 Mission started! Watch how changing acceleration changes the vehicle's motion.";
+
+start.textContent =
+"🔄 RESTART MISSION";
+
+});
+
+
+/* ANIMATION */
+
+function animate(){
+
+requestAnimationFrame(
+animate
 );
 
+const now =
+performance.now();
 
-/* =========================
-   ANIMATION
-========================= */
+const delta =
+Math.min(
+(now-lastTime)/1000,
+0.05
+);
 
-function animate() {
-
-  requestAnimationFrame(
-    animate
-  );
-
-  const now =
-    performance.now();
-
-  const delta =
-    Math.min(
-      (now - lastTime) / 1000,
-      0.05
-    );
-
-  lastTime = now;
+lastTime = now;
 
 
-  if (running) {
+if(running){
 
-    speed +=
-      acceleration * delta;
+speed +=
+acceleration*delta;
 
-    speed =
-      Math.min(
-        speed,
-        30
-      );
+speed =
+Math.min(
+speed,
+30
+);
 
-    car.position.z -=
-      speed * delta;
+car.position.z -=
+speed*delta;
 
-
-    speedText.textContent =
-      speed.toFixed(1);
-
-
-    if (
-      car.position.z <= -95
-    ) {
-
-      running = false;
-
-      message.innerHTML =
-        "🏆 Mission complete! You changed the vehicle's motion by changing acceleration. That's the concept—not just a definition.";
-
-    }
-
-  }
+speedText.textContent =
+speed.toFixed(1);
 
 
-  /* follow car */
+if(car.position.z <= -95){
 
-  const targetCameraZ =
-    car.position.z + 12;
+running = false;
 
-  camera.position.z +=
-    (targetCameraZ -
-      camera.position.z) *
-    0.04;
+message.textContent =
+"🏆 Mission complete! You discovered how acceleration changes motion.";
 
-
-  controls.target.z =
-    car.position.z - 15;
-
-  controls.update();
-
-
-  renderer.render(
-    scene,
-    camera
-  );
+}
 
 }
 
 
-/* =========================
-   RESIZE
-========================= */
+/* FOLLOW CAMERA */
 
-window.addEventListener(
-  "resize",
-  () => {
+camera.position.z +=
+(
+car.position.z + 12 -
+camera.position.z
+)*0.04;
 
-    camera.aspect =
-      window.innerWidth /
-      window.innerHeight;
-
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(
-      window.innerWidth,
-      window.innerHeight
-    );
-
-  }
+camera.lookAt(
+car.position.x,
+1,
+car.position.z-15
 );
 
 
-/* =========================
-   START
-========================= */
+renderer.render(
+scene,
+camera
+);
 
-document.getElementById(
-  "loading"
-).style.display =
-  "none";
+}
+
 
 animate();
+
+
+/* REMOVE LOADING */
+
+document.getElementById(
+"loading"
+).style.display =
+"none";
+
+
+/* RESIZE */
+
+window.addEventListener(
+"resize",
+function(){
+
+camera.aspect =
+window.innerWidth /
+window.innerHeight;
+
+camera.updateProjectionMatrix();
+
+renderer.setSize(
+window.innerWidth,
+window.innerHeight
+);
+
+});
+
+});
 
 </script>
 
