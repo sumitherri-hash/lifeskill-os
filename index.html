@@ -2,34 +2,39 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LifeSkill OS — Immersion Engine</title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>LifeSkill OS</title>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+    box-sizing:border-box;
+}
 
 html,body{
     margin:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    font-family:Arial,sans-serif;
     background:#050816;
     color:white;
+    font-family:Arial,sans-serif;
 }
 
 #loading{
     position:fixed;
     inset:0;
-    z-index:1000;
+    z-index:9999;
     display:flex;
-    align-items:center;
     justify-content:center;
+    align-items:center;
     background:#050816;
     font-size:22px;
 }
 
-#interface{
+#ui{
     position:fixed;
     inset:0;
     z-index:10;
@@ -38,8 +43,7 @@ html,body{
 
 .header{
     padding:16px 20px;
-    background:rgba(5,8,22,.82);
-    backdrop-filter:blur(12px);
+    background:rgba(5,8,22,.85);
 }
 
 .logo{
@@ -48,26 +52,25 @@ html,body{
 }
 
 .subtitle{
-    margin-top:4px;
     color:#aab2cc;
     font-size:13px;
+    margin-top:4px;
 }
 
-.goal{
-    pointer-events:auto;
+.goalBox{
     position:absolute;
-    top:82px;
+    pointer-events:auto;
+    top:80px;
     left:50%;
     transform:translateX(-50%);
     width:min(650px,calc(100% - 30px));
     padding:14px;
     border-radius:18px;
-    background:rgba(8,13,30,.9);
+    background:rgba(8,13,30,.92);
     border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(12px);
 }
 
-.goal input{
+.goalBox input{
     width:100%;
     padding:14px;
     border-radius:11px;
@@ -87,18 +90,17 @@ button{
     border:0;
     border-radius:11px;
     padding:13px 16px;
+    margin-top:9px;
     font-weight:bold;
     cursor:pointer;
 }
 
-#experienceButton{
+#create{
     flex:1;
-    margin-top:9px;
 }
 
-#vrButton{
+#enterVR{
     display:none;
-    margin-top:9px;
 }
 
 .panel{
@@ -109,13 +111,12 @@ button{
     width:min(390px,calc(100% - 30px));
     padding:18px;
     border-radius:18px;
-    background:rgba(8,13,30,.9);
+    background:rgba(8,13,30,.92);
     border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(12px);
 }
 
 .hidden{
-    display:none!important;
+    display:none;
 }
 
 .mission{
@@ -124,9 +125,9 @@ button{
 }
 
 .intent{
+    margin-top:6px;
     color:#aab2cc;
     font-size:12px;
-    margin-top:6px;
 }
 
 .info{
@@ -138,7 +139,7 @@ button{
 .stats{
     display:flex;
     gap:10px;
-    margin:13px 0;
+    margin:14px 0;
 }
 
 .stat{
@@ -161,8 +162,8 @@ button{
 
 label{
     display:block;
-    font-size:13px;
     color:#b5bdd5;
+    font-size:13px;
     margin-top:10px;
 }
 
@@ -171,68 +172,66 @@ input[type=range]{
 }
 
 #message{
-    margin-top:11px;
+    margin-top:10px;
     font-size:14px;
     line-height:1.45;
 }
 
-#vrStatus{
-    margin-top:8px;
-    font-size:12px;
+#status{
     color:#9da6c0;
+    font-size:12px;
+    margin-top:7px;
 }
 
-@media(max-width:600px){
-
-    .goal{
-        top:70px;
-    }
-
-    .panel{
-        left:10px;
-        bottom:10px;
-        width:calc(100% - 20px);
-    }
-}
 </style>
 </head>
 
+
 <body>
 
+
 <div id="loading">
-    ⚡ Entering LifeSkill OS...
+    ⚡ Loading LifeSkill OS...
 </div>
 
-<div id="interface">
+
+<div id="ui">
 
     <div class="header">
-        <div class="logo">⚡ LifeSkill OS</div>
+
+        <div class="logo">
+            ⚡ LifeSkill OS
+        </div>
+
         <div class="subtitle">
             Don't just learn it. Enter it.
         </div>
+
     </div>
 
-    <div class="goal">
+
+    <div class="goalBox">
 
         <input
-            id="goalInput"
-            placeholder="What do you want to experience and learn?"
+            id="goal"
+            type="text"
+            placeholder="What do you want to learn?"
         >
 
         <div class="buttons">
 
-            <button id="experienceButton">
+            <button id="create">
                 🧠 CREATE EXPERIENCE
             </button>
 
-            <button id="vrButton">
+            <button id="enterVR">
                 🥽 ENTER VR
             </button>
 
         </div>
 
-        <div id="vrStatus">
-            Checking immersive capabilities...
+        <div id="status">
+            Starting 3D environment...
         </div>
 
     </div>
@@ -246,27 +245,51 @@ input[type=range]{
             </span>
         </div>
 
-        <div id="intent" class="intent"></div>
+        <div
+            id="intent"
+            class="intent">
+        </div>
 
-        <p id="missionInfo" class="info"></p>
+        <p
+            id="missionInfo"
+            class="info">
+        </p>
+
 
         <div class="stats">
 
             <div class="stat">
-                <small>Speed</small>
+
+                <small>
+                    Speed
+                </small>
+
                 <strong>
-                    <span id="speed">0</span> m/s
+                    <span id="speed">
+                        0
+                    </span>
+                    m/s
                 </strong>
+
             </div>
 
+
             <div class="stat">
-                <small>Acceleration</small>
+
+                <small>
+                    Acceleration
+                </small>
+
                 <strong>
-                    <span id="accelerationValue">5</span>
+                    <span id="acc">
+                        5
+                    </span>
                 </strong>
+
             </div>
 
         </div>
+
 
         <label>
             Acceleration
@@ -281,12 +304,14 @@ input[type=range]{
             step="0.1"
         >
 
-        <button id="startButton">
+
+        <button id="start">
             🚀 START EXPERIENCE
         </button>
 
+
         <div id="message">
-            Look around. Experiment. Discover.
+            Your virtual experience is ready.
         </div>
 
     </div>
@@ -294,915 +319,846 @@ input[type=range]{
 </div>
 
 
-<script type="module">
+<!-- THREE.JS -->
 
-import * as THREE from
-"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
-
-import { VRButton } from
-"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/webxr/VRButton.js";
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
 
-/* ==================================================
-   BASIC SETUP
-================================================== */
+<script>
 
-const scene =
-    new THREE.Scene();
-
-scene.background =
-    new THREE.Color(0x07101f);
-
-scene.fog =
-    new THREE.Fog(
-        0x07101f,
-        25,
-        190
-    );
-
-
-/* ==================================================
-   CAMERA
-================================================== */
-
-const camera =
-    new THREE.PerspectiveCamera(
-        70,
-        window.innerWidth /
-        window.innerHeight,
-        0.1,
-        500
-    );
-
-camera.position.set(
-    8,
-    5,
-    12
+window.addEventListener(
+    "load",
+    startLifeSkillOS
 );
 
 
-/* ==================================================
-   RENDERER + WEBXR
-================================================== */
+function startLifeSkillOS(){
 
-const renderer =
-    new THREE.WebGLRenderer({
-        antialias:true
-    });
+    /* =========================================
+       CHECK THREE.JS
+    ========================================= */
 
-renderer.setPixelRatio(
-    Math.min(
-        window.devicePixelRatio,
-        2
-    )
-);
+    if(
+        typeof THREE === "undefined"
+    ){
 
-renderer.setSize(
-    window.innerWidth,
-    window.innerHeight
-);
+        document.getElementById(
+            "loading"
+        ).innerHTML =
+        "❌ 3D engine failed to load.<br>" +
+        "<small>Please refresh the page.</small>";
 
-renderer.xr.enabled = true;
-
-document.body.appendChild(
-    renderer.domElement
-);
-
-
-/* ==================================================
-   VR BUTTON
-================================================== */
-
-const vrButton =
-    VRButton.createButton(
-        renderer
-    );
-
-vrButton.style.display =
-    "none";
-
-document.body.appendChild(
-    vrButton
-);
-
-
-/* ==================================================
-   CHECK VR SUPPORT
-================================================== */
-
-const vrStatus =
-    document.getElementById(
-        "vrStatus"
-    );
-
-if (
-    navigator.xr &&
-    navigator.xr.isSessionSupported
-) {
-
-    try {
-
-        const supported =
-            await navigator.xr.isSessionSupported(
-                "immersive-vr"
-            );
-
-        if (supported) {
-
-            document.getElementById(
-                "vrButton"
-            ).style.display =
-                "block";
-
-            vrStatus.textContent =
-                "🥽 VR detected — immersive mode available.";
-
-        } else {
-
-            vrStatus.textContent =
-                "📱 3D mode available. A compatible WebXR device is required for immersive VR.";
-
-        }
-
-    } catch {
-
-        vrStatus.textContent =
-            "📱 3D mode available.";
-
+        return;
     }
 
-} else {
 
-    vrStatus.textContent =
-        "📱 3D mode available. WebXR is not available on this device.";
+    /* =========================================
+       SCENE
+    ========================================= */
 
-}
+    const scene =
+        new THREE.Scene();
+
+    scene.background =
+        new THREE.Color(
+            0x07101f
+        );
+
+    scene.fog =
+        new THREE.Fog(
+            0x07101f,
+            30,
+            200
+        );
 
 
-/* ==================================================
-   LIGHTING
-================================================== */
+    /* =========================================
+       CAMERA
+    ========================================= */
 
-const hemisphere =
-    new THREE.HemisphereLight(
-        0xffffff,
-        0x223344,
-        2
+    const camera =
+        new THREE.PerspectiveCamera(
+            70,
+            window.innerWidth /
+            window.innerHeight,
+            0.1,
+            500
+        );
+
+    camera.position.set(
+        7,
+        5,
+        12
     );
 
-scene.add(
-    hemisphere
-);
 
+    /* =========================================
+       RENDERER
+    ========================================= */
 
-const sun =
-    new THREE.DirectionalLight(
-        0xffffff,
-        3
+    const renderer =
+        new THREE.WebGLRenderer({
+            antialias:true
+        });
+
+    renderer.setPixelRatio(
+        Math.min(
+            window.devicePixelRatio,
+            2
+        )
     );
 
-sun.position.set(
-    20,
-    30,
-    10
-);
-
-scene.add(
-    sun
-);
-
-
-/* ==================================================
-   GROUND
-================================================== */
-
-const ground =
-    new THREE.Mesh(
-        new THREE.PlaneGeometry(
-            300,
-            300
-        ),
-        new THREE.MeshStandardMaterial({
-            color:0x172019
-        })
+    renderer.setSize(
+        window.innerWidth,
+        window.innerHeight
     );
 
-ground.rotation.x =
-    -Math.PI / 2;
+    renderer.xr.enabled =
+        true;
 
-scene.add(
-    ground
-);
-
-
-/* ==================================================
-   ROAD
-================================================== */
-
-const road =
-    new THREE.Mesh(
-        new THREE.PlaneGeometry(
-            14,
-            240
-        ),
-        new THREE.MeshStandardMaterial({
-            color:0x171a20
-        })
+    document.body.appendChild(
+        renderer.domElement
     );
 
-road.rotation.x =
-    -Math.PI / 2;
 
-road.position.set(
-    0,
-    .01,
-    -80
-);
+    /* =========================================
+       LIGHTING
+    ========================================= */
 
-scene.add(
-    road
-);
+    const light =
+        new THREE.HemisphereLight(
+            0xffffff,
+            0x223344,
+            2
+        );
+
+    scene.add(light);
 
 
-/* ==================================================
-   ROAD MARKINGS
-================================================== */
+    const sun =
+        new THREE.DirectionalLight(
+            0xffffff,
+            3
+        );
 
-for(
-    let z = 20;
-    z > -210;
-    z -= 8
-){
+    sun.position.set(
+        20,
+        30,
+        10
+    );
 
-    const line =
+    scene.add(sun);
+
+
+    /* =========================================
+       GROUND
+    ========================================= */
+
+    const ground =
         new THREE.Mesh(
-            new THREE.BoxGeometry(
-                .25,
-                .03,
-                4
+
+            new THREE.PlaneGeometry(
+                300,
+                300
             ),
+
             new THREE.MeshStandardMaterial({
-                color:0xffffff
+                color:0x172019
             })
+
         );
 
-    line.position.set(
+    ground.rotation.x =
+        -Math.PI / 2;
+
+    scene.add(ground);
+
+
+    /* =========================================
+       ROAD
+    ========================================= */
+
+    const road =
+        new THREE.Mesh(
+
+            new THREE.PlaneGeometry(
+                14,
+                240
+            ),
+
+            new THREE.MeshStandardMaterial({
+                color:0x171a20
+            })
+
+        );
+
+    road.rotation.x =
+        -Math.PI / 2;
+
+    road.position.set(
         0,
-        .04,
-        z
+        .01,
+        -80
     );
 
-    scene.add(
-        line
-    );
-}
+    scene.add(road);
 
 
-/* ==================================================
-   CAR
-================================================== */
+    /* =========================================
+       ROAD LINES
+    ========================================= */
 
-const car =
-    new THREE.Group();
+    for(
+        let z = 20;
+        z > -210;
+        z -= 8
+    ){
 
-
-const body =
-    new THREE.Mesh(
-        new THREE.BoxGeometry(
-            2.4,
-            .7,
-            4
-        ),
-        new THREE.MeshStandardMaterial({
-            color:0x1677ff,
-            metalness:.4,
-            roughness:.35
-        })
-    );
-
-body.position.y =
-    .75;
-
-car.add(
-    body
-);
-
-
-const cabin =
-    new THREE.Mesh(
-        new THREE.BoxGeometry(
-            1.7,
-            .65,
-            1.8
-        ),
-        new THREE.MeshStandardMaterial({
-            color:0x8fd3ff,
-            transparent:true,
-            opacity:.75
-        })
-    );
-
-cabin.position.set(
-    0,
-    1.35,
-    -.25
-);
-
-car.add(
-    cabin
-);
-
-
-/* WHEELS */
-
-const wheelGeometry =
-    new THREE.CylinderGeometry(
-        .45,
-        .45,
-        .35,
-        24
-    );
-
-const wheelMaterial =
-    new THREE.MeshStandardMaterial({
-        color:0x080808
-    });
-
-
-[
-    [-1.25,.45,1.25],
-    [1.25,.45,1.25],
-    [-1.25,.45,-1.25],
-    [1.25,.45,-1.25]
-].forEach(
-    p => {
-
-        const wheel =
+        const line =
             new THREE.Mesh(
-                wheelGeometry,
-                wheelMaterial
-            );
 
-        wheel.rotation.z =
-            Math.PI / 2;
-
-        wheel.position.set(
-            p[0],
-            p[1],
-            p[2]
-        );
-
-        car.add(
-            wheel
-        );
-
-    }
-);
-
-
-car.position.set(
-    0,
-    0,
-    10
-);
-
-scene.add(
-    car
-);
-
-
-/* ==================================================
-   CHECKPOINT
-================================================== */
-
-const checkpoint =
-    new THREE.Group();
-
-
-const checkpointMaterial =
-    new THREE.MeshStandardMaterial({
-        color:0xffff00,
-        emissive:0x665500
-    });
-
-
-const ring =
-    new THREE.Mesh(
-        new THREE.TorusGeometry(
-            5,
-            .25,
-            16,
-            64
-        ),
-        checkpointMaterial
-    );
-
-ring.rotation.y =
-    Math.PI / 2;
-
-ring.position.y =
-    4;
-
-checkpoint.add(
-    ring
-);
-
-
-[-5,5].forEach(
-    x => {
-
-        const pillar =
-            new THREE.Mesh(
                 new THREE.BoxGeometry(
-                    .4,
-                    8,
-                    .4
+                    .25,
+                    .03,
+                    4
                 ),
-                checkpointMaterial
+
+                new THREE.MeshStandardMaterial({
+                    color:0xffffff
+                })
+
             );
 
-        pillar.position.set(
-            x,
-            4,
-            0
+        line.position.set(
+            0,
+            .04,
+            z
         );
 
-        checkpoint.add(
-            pillar
-        );
-
+        scene.add(line);
     }
-);
 
 
-checkpoint.position.z =
-    -100;
+    /* =========================================
+       CAR
+    ========================================= */
 
-scene.add(
-    checkpoint
-);
-
-
-/* ==================================================
-   ENVIRONMENT
-================================================== */
-
-function createTree(
-    x,
-    z
-){
-
-    const tree =
+    const car =
         new THREE.Group();
 
 
-    const trunk =
+    const body =
         new THREE.Mesh(
-            new THREE.CylinderGeometry(
-                .3,
-                .45,
-                3,
-                12
+
+            new THREE.BoxGeometry(
+                2.4,
+                .7,
+                4
             ),
+
             new THREE.MeshStandardMaterial({
-                color:0x68452d
+                color:0x1677ff,
+                metalness:.4,
+                roughness:.35
             })
+
         );
 
-    trunk.position.y =
-        1.5;
+    body.position.y =
+        .75;
 
-    tree.add(
-        trunk
-    );
+    car.add(body);
 
 
-    const leaves =
+    const cabin =
         new THREE.Mesh(
-            new THREE.SphereGeometry(
+
+            new THREE.BoxGeometry(
                 1.7,
-                16,
-                16
+                .65,
+                1.8
             ),
+
             new THREE.MeshStandardMaterial({
-                color:0x237a3a
+                color:0x8fd3ff,
+                transparent:true,
+                opacity:.75
             })
+
         );
 
-    leaves.position.y =
-        3.5;
-
-    tree.add(
-        leaves
-    );
-
-
-    tree.position.set(
-        x,
+    cabin.position.set(
         0,
-        z
+        1.35,
+        -.25
     );
 
-    scene.add(
-        tree
-    );
-}
+    car.add(cabin);
 
 
-for(
-    let z = 15;
-    z > -210;
-    z -= 15
-){
+    /* =========================================
+       WHEELS
+    ========================================= */
 
-    createTree(
-        -11,
-        z
-    );
-
-    createTree(
-        11,
-        z - 6
-    );
-}
-
-
-/* ==================================================
-   EXPERIENCE VARIABLES
-================================================== */
-
-let speed = 0;
-
-let acceleration = 5;
-
-let running = false;
-
-let lastTime =
-    performance.now();
-
-
-/* ==================================================
-   UI
-================================================== */
-
-const goalInput =
-    document.getElementById(
-        "goalInput"
-    );
-
-const experienceButton =
-    document.getElementById(
-        "experienceButton"
-    );
-
-const panel =
-    document.getElementById(
-        "panel"
-    );
-
-const missionTitle =
-    document.getElementById(
-        "missionTitle"
-    );
-
-const missionInfo =
-    document.getElementById(
-        "missionInfo"
-    );
-
-const intent =
-    document.getElementById(
-        "intent"
-    );
-
-const speedText =
-    document.getElementById(
-        "speed"
-    );
-
-const accelerationValue =
-    document.getElementById(
-        "accelerationValue"
-    );
-
-const accelerationSlider =
-    document.getElementById(
-        "acceleration"
-    );
-
-const startButton =
-    document.getElementById(
-        "startButton"
-    );
-
-const message =
-    document.getElementById(
-        "message"
-    );
-
-
-/* ==================================================
-   LOCAL EXPERIENCE ENGINE
-================================================== */
-
-function understandGoal(
-    text
-){
-
-    const t =
-        text.toLowerCase();
-
-    if(
-        t.includes("motion") ||
-        t.includes("speed") ||
-        t.includes("velocity") ||
-        t.includes("acceleration") ||
-        t.includes("force")
-    ){
-
-        return {
-            subject:"Physics",
-            experience:"3D Motion Simulation",
-            mission:"Master Motion",
-            description:
-            "You are inside a virtual motion environment. Experiment with acceleration and observe how motion changes."
-        };
-
-    }
-
-
-    if(
-        t.includes("biology") ||
-        t.includes("cell") ||
-        t.includes("plant") ||
-        t.includes("photosynthesis")
-    ){
-
-        return {
-            subject:"Biology",
-            experience:"Virtual Biology World",
-            mission:"Explore Life",
-            description:
-            "You have entered a virtual biology environment. This world will eventually let you explore living systems from the inside."
-        };
-
-    }
-
-
-    if(
-        t.includes("math") ||
-        t.includes("algebra") ||
-        t.includes("geometry") ||
-        t.includes("triangle")
-    ){
-
-        return {
-            subject:"Mathematics",
-            experience:"Interactive Math World",
-            mission:"Solve the World",
-            description:
-            "Mathematics becomes a spatial challenge. Explore relationships and solve problems through interaction."
-        };
-
-    }
-
-
-    if(
-        t.includes("speaking") ||
-        t.includes("communication") ||
-        t.includes("presentation")
-    ){
-
-        return {
-            subject:"Communication",
-            experience:"Virtual Speaking Arena",
-            mission:"Master Communication",
-            description:
-            "You will eventually enter a simulated social environment where characters respond to your communication choices."
-        };
-
-    }
-
-
-    return {
-        subject:"General Skill",
-        experience:"Immersive Exploration",
-        mission:"Begin Your Journey",
-        description:
-        "LifeSkill OS has created an immersive learning environment for your goal. More specialized worlds will connect to this engine."
-    };
-}
-
-
-/* ==================================================
-   CREATE EXPERIENCE
-================================================== */
-
-experienceButton.addEventListener(
-    "click",
-    () => {
-
-        const text =
-            goalInput.value.trim();
-
-        if(!text){
-
-            alert(
-                "Tell LifeSkill OS what you want to learn."
-            );
-
-            return;
-        }
-
-
-        const result =
-            understandGoal(
-                text
-            );
-
-
-        panel.classList.remove(
-            "hidden"
+    const wheelGeometry =
+        new THREE.CylinderGeometry(
+            .45,
+            .45,
+            .35,
+            24
         );
 
-
-        missionTitle.textContent =
-            result.mission;
-
-
-        intent.textContent =
-            "🧠 " +
-            result.subject +
-            " • " +
-            result.experience;
+    const wheelMaterial =
+        new THREE.MeshStandardMaterial({
+            color:0x080808
+        });
 
 
-        missionInfo.textContent =
-            result.description;
+    const wheelPositions = [
+
+        [-1.25,.45,1.25],
+        [1.25,.45,1.25],
+        [-1.25,.45,-1.25],
+        [1.25,.45,-1.25]
+
+    ];
 
 
-        message.textContent =
-            "🌍 Experience created. Look around and interact with the world.";
+    wheelPositions.forEach(
+        function(position){
 
-
-        startButton.textContent =
-            "🚀 ENTER EXPERIENCE";
-
-    }
-);
-
-
-/* ==================================================
-   ACCELERATION
-================================================== */
-
-accelerationSlider.addEventListener(
-    "input",
-    () => {
-
-        acceleration =
-            Number(
-                accelerationSlider.value
-            );
-
-        accelerationValue.textContent =
-            acceleration.toFixed(1);
-
-    }
-);
-
-
-/* ==================================================
-   START
-================================================== */
-
-startButton.addEventListener(
-    "click",
-    () => {
-
-        running = true;
-
-        speed = 0;
-
-        car.position.z =
-            10;
-
-        message.textContent =
-            "🚀 You are inside the simulation. Experiment and discover what changes.";
-
-        startButton.textContent =
-            "🔄 RESTART EXPERIENCE";
-
-    }
-);
-
-
-/* ==================================================
-   VR ENTER BUTTON
-================================================== */
-
-document.getElementById(
-    "vrButton"
-).addEventListener(
-    "click",
-    () => {
-
-        if(
-            renderer.xr &&
-            renderer.xr.isPresenting === false
-        ){
-
-            const button =
-                document.querySelector(
-                    ".webxr-button"
+            const wheel =
+                new THREE.Mesh(
+                    wheelGeometry,
+                    wheelMaterial
                 );
 
-            if(button){
-                button.click();
+            wheel.rotation.z =
+                Math.PI / 2;
+
+            wheel.position.set(
+                position[0],
+                position[1],
+                position[2]
+            );
+
+            car.add(wheel);
+
+        }
+    );
+
+
+    car.position.set(
+        0,
+        0,
+        10
+    );
+
+    scene.add(car);
+
+
+    /* =========================================
+       TREES
+    ========================================= */
+
+    function tree(x,z){
+
+        const group =
+            new THREE.Group();
+
+
+        const trunk =
+            new THREE.Mesh(
+
+                new THREE.CylinderGeometry(
+                    .3,
+                    .45,
+                    3,
+                    12
+                ),
+
+                new THREE.MeshStandardMaterial({
+                    color:0x68452d
+                })
+
+            );
+
+        trunk.position.y =
+            1.5;
+
+        group.add(trunk);
+
+
+        const leaves =
+            new THREE.Mesh(
+
+                new THREE.SphereGeometry(
+                    1.7,
+                    16,
+                    16
+                ),
+
+                new THREE.MeshStandardMaterial({
+                    color:0x237a3a
+                })
+
+            );
+
+        leaves.position.y =
+            3.5;
+
+        group.add(leaves);
+
+
+        group.position.set(
+            x,
+            0,
+            z
+        );
+
+        scene.add(group);
+
+    }
+
+
+    for(
+        let z = 15;
+        z > -210;
+        z -= 15
+    ){
+
+        tree(-11,z);
+
+        tree(11,z-6);
+
+    }
+
+
+    /* =========================================
+       CHECKPOINT
+    ========================================= */
+
+    const checkpoint =
+        new THREE.Group();
+
+
+    const checkpointMaterial =
+        new THREE.MeshStandardMaterial({
+            color:0xffff00,
+            emissive:0x665500
+        });
+
+
+    const ring =
+        new THREE.Mesh(
+
+            new THREE.TorusGeometry(
+                5,
+                .25,
+                16,
+                64
+            ),
+
+            checkpointMaterial
+
+        );
+
+    ring.rotation.y =
+        Math.PI / 2;
+
+    ring.position.y =
+        4;
+
+    checkpoint.add(ring);
+
+
+    [-5,5].forEach(
+        function(x){
+
+            const pillar =
+                new THREE.Mesh(
+
+                    new THREE.BoxGeometry(
+                        .4,
+                        8,
+                        .4
+                    ),
+
+                    checkpointMaterial
+
+                );
+
+            pillar.position.set(
+                x,
+                4,
+                0
+            );
+
+            checkpoint.add(pillar);
+
+        }
+    );
+
+
+    checkpoint.position.z =
+        -100;
+
+    scene.add(checkpoint);
+
+
+    /* =========================================
+       GAME STATE
+    ========================================= */
+
+    let speed = 0;
+
+    let acceleration = 5;
+
+    let running = false;
+
+    let lastTime =
+        performance.now();
+
+
+    /* =========================================
+       UI REFERENCES
+    ========================================= */
+
+    const goal =
+        document.getElementById(
+            "goal"
+        );
+
+    const create =
+        document.getElementById(
+            "create"
+        );
+
+    const enterVR =
+        document.getElementById(
+            "enterVR"
+        );
+
+    const panel =
+        document.getElementById(
+            "panel"
+        );
+
+    const missionTitle =
+        document.getElementById(
+            "missionTitle"
+        );
+
+    const intent =
+        document.getElementById(
+            "intent"
+        );
+
+    const missionInfo =
+        document.getElementById(
+            "missionInfo"
+        );
+
+    const speedText =
+        document.getElementById(
+            "speed"
+        );
+
+    const accText =
+        document.getElementById(
+            "acc"
+        );
+
+    const slider =
+        document.getElementById(
+            "acceleration"
+        );
+
+    const start =
+        document.getElementById(
+            "start"
+        );
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+
+    /* =========================================
+       VR SUPPORT
+    ========================================= */
+
+    if(
+        navigator.xr
+    ){
+
+        navigator.xr
+        .isSessionSupported(
+            "immersive-vr"
+        )
+        .then(
+            function(supported){
+
+                if(supported){
+
+                    enterVR.style.display =
+                        "block";
+
+                    status.textContent =
+                        "🥽 VR headset detected.";
+
+                }
+                else{
+
+                    status.textContent =
+                        "📱 3D mode ready. Compatible VR hardware is required for immersive mode.";
+
+                }
+
+            }
+        )
+        .catch(
+            function(){
+
+                status.textContent =
+                    "📱 3D mode ready.";
+
+            }
+        );
+
+    }
+    else{
+
+        status.textContent =
+            "📱 3D mode ready. WebXR is unavailable on this device.";
+
+    }
+
+
+    /* =========================================
+       CREATE VR SESSION
+    ========================================= */
+
+    enterVR.addEventListener(
+        "click",
+        async function(){
+
+            if(
+                !navigator.xr
+            ){
+
+                alert(
+                    "WebXR VR is not available on this device."
+                );
+
+                return;
+            }
+
+
+            try{
+
+                const session =
+                    await navigator.xr.requestSession(
+                        "immersive-vr",
+                        {
+                            optionalFeatures:[
+                                "local-floor",
+                                "bounded-floor"
+                            ]
+                        }
+                    );
+
+                await renderer.xr.setSession(
+                    session
+                );
+
+                status.textContent =
+                    "🥽 You are now inside LifeSkill OS.";
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                status.textContent =
+                    "VR could not start on this device.";
+
             }
 
         }
-
-    }
-);
+    );
 
 
-/* ==================================================
-   ANIMATION
-================================================== */
+    /* =========================================
+       EXPERIENCE ROUTER
+    ========================================= */
 
-function animate(){
+    function understand(
+        text
+    ){
 
-    const now =
-        performance.now();
-
-    const delta =
-        Math.min(
-            (now-lastTime)/1000,
-            .05
-        );
-
-    lastTime =
-        now;
-
-
-    if(running){
-
-        speed +=
-            acceleration *
-            delta;
-
-        speed =
-            Math.min(
-                speed,
-                30
-            );
-
-        car.position.z -=
-            speed *
-            delta;
-
-        speedText.textContent =
-            speed.toFixed(1);
+        const t =
+            text.toLowerCase();
 
 
         if(
-            car.position.z <= -95
+            t.includes("motion") ||
+            t.includes("speed") ||
+            t.includes("velocity") ||
+            t.includes("acceleration") ||
+            t.includes("force") ||
+            t.includes("physics")
         ){
 
-            running = false;
+            return {
 
-            message.textContent =
-                "🏆 Experience complete. You discovered how acceleration affects motion.";
+                subject:"Physics",
+
+                experience:
+                    "3D Motion Lab",
+
+                mission:
+                    "Master Motion",
+
+                description:
+                    "You are inside a virtual motion laboratory. Control acceleration and discover how motion changes through experimentation."
+
+            };
 
         }
 
+
+        if(
+            t.includes("biology") ||
+            t.includes("cell") ||
+            t.includes("plant") ||
+            t.includes("photosynthesis")
+        ){
+
+            return {
+
+                subject:"Biology",
+
+                experience:
+                    "Virtual Biology World",
+
+                mission:
+                    "Explore Life",
+
+                description:
+                    "A future LifeSkill OS biology world will allow you to explore living systems through immersive simulation."
+
+            };
+
+        }
+
+
+        if(
+            t.includes("math") ||
+            t.includes("algebra") ||
+            t.includes("geometry") ||
+            t.includes("triangle")
+        ){
+
+            return {
+
+                subject:"Mathematics",
+
+                experience:
+                    "Interactive Math World",
+
+                mission:
+                    "Solve the Challenge",
+
+                description:
+                    "Enter a spatial mathematics environment where concepts become interactive challenges."
+
+            };
+
+        }
+
+
+        if(
+            t.includes("speaking") ||
+            t.includes("communication") ||
+            t.includes("presentation")
+        ){
+
+            return {
+
+                subject:"Communication",
+
+                experience:
+                    "Virtual Speaking Arena",
+
+                mission:
+                    "Master Communication",
+
+                description:
+                    "Practice communication inside a simulated environment where virtual characters can respond to your decisions."
+
+            };
+
+        }
+
+
+        return {
+
+            subject:"Life Skill",
+
+            experience:
+                "Immersive Exploration",
+
+            mission:
+                "Begin Your Journey",
+
+            description:
+                "LifeSkill OS has created a starting experience for your goal."
+
+        };
+
     }
 
 
-    /*
-       Desktop camera follows the vehicle.
-       In VR, the headset controls the camera.
-    */
+    /* =========================================
+       CREATE EXPERIENCE
+    ========================================= */
 
-    if(
-        !renderer.xr.isPresenting
-    ){
+    create.addEventListener(
+        "click",
+        function(){
 
-        camera.position.z +=
-            (
-                car.position.z +
-                12 -
-                camera.position.z
-            ) * .04;
-
-        camera.lookAt(
-            car.position.x,
-            1,
-            car.position.z - 15
-        );
-
-    }
+            const text =
+                goal.value.trim();
 
 
-  
+            if(!text){
+
+                alert(
+                    "Tell LifeSkill OS what you want to learn."
+                );
+
+                return;
+            }
+
+
+            const result =
+                understand(text);
+
+
+            panel.classList.remove(
+                "hidden"
+            );
+
+
+            missionTitle.textContent =
+                result.mission;
+
+
+            intent.
