@@ -3,729 +3,1206 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LifeSkill OS 3D</title>
+<title>LifeSkill OS — Immersion Engine</title>
 
 <style>
 *{box-sizing:border-box}
 
-body{
-margin:0;
-overflow:hidden;
-font-family:Arial,sans-serif;
-background:#050816;
-color:white
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,sans-serif;
+    background:#050816;
+    color:white;
 }
 
 #loading{
-position:fixed;
-inset:0;
-z-index:100;
-display:flex;
-align-items:center;
-justify-content:center;
-background:#050816;
-font-size:22px
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#050816;
+    font-size:22px;
 }
 
-#ui{
-position:fixed;
-z-index:10;
-top:0;
-left:0;
-width:100%;
-pointer-events:none
+#interface{
+    position:fixed;
+    inset:0;
+    z-index:10;
+    pointer-events:none;
 }
 
 .header{
-padding:18px;
-background:rgba(5,8,22,.85)
+    padding:16px 20px;
+    background:rgba(5,8,22,.82);
+    backdrop-filter:blur(12px);
 }
 
 .logo{
-font-size:22px;
-font-weight:bold
+    font-size:23px;
+    font-weight:bold;
 }
 
 .subtitle{
-color:#aab2cc;
-font-size:13px;
-margin-top:5px
+    margin-top:4px;
+    color:#aab2cc;
+    font-size:13px;
 }
 
-.panel{
-pointer-events:auto;
-position:fixed;
-left:15px;
-bottom:15px;
-width:min(370px,calc(100% - 30px));
-padding:18px;
-border-radius:18px;
-background:rgba(8,13,30,.9);
-border:1px solid rgba(255,255,255,.15)
+.goal{
+    pointer-events:auto;
+    position:absolute;
+    top:82px;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(650px,calc(100% - 30px));
+    padding:14px;
+    border-radius:18px;
+    background:rgba(8,13,30,.9);
+    border:1px solid rgba(255,255,255,.15);
+    backdrop-filter:blur(12px);
 }
 
-.mission{
-font-size:18px;
-font-weight:bold;
-margin-bottom:8px
+.goal input{
+    width:100%;
+    padding:14px;
+    border-radius:11px;
+    border:1px solid #303852;
+    background:#10162a;
+    color:white;
+    font-size:15px;
+    outline:none;
 }
 
-.info{
-color:#b5bdd5;
-font-size:13px;
-line-height:1.5
-}
-
-.stats{
-display:flex;
-gap:10px;
-margin:15px 0
-}
-
-.stat{
-flex:1;
-padding:12px;
-border-radius:12px;
-background:rgba(255,255,255,.07);
-text-align:center
-}
-
-.stat small{
-display:block;
-color:#9da6c0;
-margin-bottom:5px
-}
-
-.stat strong{
-font-size:20px
-}
-
-input[type=range]{
-width:100%
+.buttons{
+    display:flex;
+    gap:8px;
 }
 
 button{
-width:100%;
-margin-top:12px;
-padding:14px;
-border:0;
-border-radius:12px;
-font-weight:bold;
-cursor:pointer
+    border:0;
+    border-radius:11px;
+    padding:13px 16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+#experienceButton{
+    flex:1;
+    margin-top:9px;
+}
+
+#vrButton{
+    display:none;
+    margin-top:9px;
+}
+
+.panel{
+    pointer-events:auto;
+    position:absolute;
+    left:15px;
+    bottom:15px;
+    width:min(390px,calc(100% - 30px));
+    padding:18px;
+    border-radius:18px;
+    background:rgba(8,13,30,.9);
+    border:1px solid rgba(255,255,255,.15);
+    backdrop-filter:blur(12px);
+}
+
+.hidden{
+    display:none!important;
+}
+
+.mission{
+    font-size:19px;
+    font-weight:bold;
+}
+
+.intent{
+    color:#aab2cc;
+    font-size:12px;
+    margin-top:6px;
+}
+
+.info{
+    color:#b5bdd5;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.stats{
+    display:flex;
+    gap:10px;
+    margin:13px 0;
+}
+
+.stat{
+    flex:1;
+    padding:11px;
+    border-radius:12px;
+    background:rgba(255,255,255,.07);
+    text-align:center;
+}
+
+.stat small{
+    display:block;
+    color:#9da6c0;
+    margin-bottom:5px;
+}
+
+.stat strong{
+    font-size:19px;
+}
+
+label{
+    display:block;
+    font-size:13px;
+    color:#b5bdd5;
+    margin-top:10px;
+}
+
+input[type=range]{
+    width:100%;
 }
 
 #message{
-margin-top:12px;
-font-size:14px;
-line-height:1.4
+    margin-top:11px;
+    font-size:14px;
+    line-height:1.45;
+}
+
+#vrStatus{
+    margin-top:8px;
+    font-size:12px;
+    color:#9da6c0;
+}
+
+@media(max-width:600px){
+
+    .goal{
+        top:70px;
+    }
+
+    .panel{
+        left:10px;
+        bottom:10px;
+        width:calc(100% - 20px);
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div id="loading">⚡ Loading LifeSkill OS...</div>
-
-<div id="ui">
-
-<div class="header">
-<div class="logo">⚡ LifeSkill OS</div>
-<div class="subtitle">Don't just learn it. Enter it.</div>
+<div id="loading">
+    ⚡ Entering LifeSkill OS...
 </div>
 
-<div class="panel">
+<div id="interface">
 
-<div class="mission">
-🎯 Mission 01 — Master Motion
+    <div class="header">
+        <div class="logo">⚡ LifeSkill OS</div>
+        <div class="subtitle">
+            Don't just learn it. Enter it.
+        </div>
+    </div>
+
+    <div class="goal">
+
+        <input
+            id="goalInput"
+            placeholder="What do you want to experience and learn?"
+        >
+
+        <div class="buttons">
+
+            <button id="experienceButton">
+                🧠 CREATE EXPERIENCE
+            </button>
+
+            <button id="vrButton">
+                🥽 ENTER VR
+            </button>
+
+        </div>
+
+        <div id="vrStatus">
+            Checking immersive capabilities...
+        </div>
+
+    </div>
+
+
+    <div id="panel" class="panel hidden">
+
+        <div class="mission">
+            🎯 <span id="missionTitle">
+                Mission
+            </span>
+        </div>
+
+        <div id="intent" class="intent"></div>
+
+        <p id="missionInfo" class="info"></p>
+
+        <div class="stats">
+
+            <div class="stat">
+                <small>Speed</small>
+                <strong>
+                    <span id="speed">0</span> m/s
+                </strong>
+            </div>
+
+            <div class="stat">
+                <small>Acceleration</small>
+                <strong>
+                    <span id="accelerationValue">5</span>
+                </strong>
+            </div>
+
+        </div>
+
+        <label>
+            Acceleration
+        </label>
+
+        <input
+            id="acceleration"
+            type="range"
+            min="0"
+            max="10"
+            value="5"
+            step="0.1"
+        >
+
+        <button id="startButton">
+            🚀 START EXPERIENCE
+        </button>
+
+        <div id="message">
+            Look around. Experiment. Discover.
+        </div>
+
+    </div>
+
 </div>
 
-<div class="info">
-Control the vehicle and discover how acceleration changes motion.
-</div>
 
-<div class="stats">
+<script type="module">
 
-<div class="stat">
-<small>Speed</small>
-<strong><span id="speed">0</span> m/s</strong>
-</div>
+import * as THREE from
+"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
 
-<div class="stat">
-<small>Acceleration</small>
-<strong><span id="acc">5</span></strong>
-</div>
-
-</div>
-
-<label>Acceleration</label>
-
-<input
-id="acceleration"
-type="range"
-min="0"
-max="10"
-value="5"
-step="0.1">
-
-<button id="start">
-🚀 START MISSION
-</button>
-
-<div id="message">
-Experiment with acceleration and observe what happens.
-</div>
-
-</div>
-</div>
+import { VRButton } from
+"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/webxr/VRButton.js";
 
 
-<!-- THREE.JS -->
-
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-
-
-<script>
-
-window.addEventListener("load", function(){
-
-if(typeof THREE === "undefined"){
-
-document.getElementById("loading").innerHTML =
-"❌ 3D engine could not load.<br><small>Check your internet connection.</small>";
-
-return;
-
-}
-
-
-/* SCENE */
+/* ==================================================
+   BASIC SETUP
+================================================== */
 
 const scene =
-new THREE.Scene();
+    new THREE.Scene();
 
 scene.background =
-new THREE.Color(0x07101f);
+    new THREE.Color(0x07101f);
 
 scene.fog =
-new THREE.Fog(
-0x07101f,
-30,
-180
-);
+    new THREE.Fog(
+        0x07101f,
+        25,
+        190
+    );
 
 
-/* CAMERA */
+/* ==================================================
+   CAMERA
+================================================== */
 
 const camera =
-new THREE.PerspectiveCamera(
-60,
-window.innerWidth /
-window.innerHeight,
-0.1,
-500
-);
+    new THREE.PerspectiveCamera(
+        70,
+        window.innerWidth /
+        window.innerHeight,
+        0.1,
+        500
+    );
 
 camera.position.set(
-8,6,12
+    8,
+    5,
+    12
 );
 
 
-/* RENDERER */
+/* ==================================================
+   RENDERER + WEBXR
+================================================== */
 
 const renderer =
-new THREE.WebGLRenderer({
-antialias:true
-});
+    new THREE.WebGLRenderer({
+        antialias:true
+    });
 
 renderer.setPixelRatio(
-Math.min(window.devicePixelRatio,2)
+    Math.min(
+        window.devicePixelRatio,
+        2
+    )
 );
 
 renderer.setSize(
-window.innerWidth,
-window.innerHeight
+    window.innerWidth,
+    window.innerHeight
 );
 
-renderer.shadowMap.enabled =
-true;
+renderer.xr.enabled = true;
 
 document.body.appendChild(
-renderer.domElement
+    renderer.domElement
 );
 
 
-/* LIGHT */
+/* ==================================================
+   VR BUTTON
+================================================== */
 
-const light =
-new THREE.HemisphereLight(
-0xffffff,
-0x223344,
-2
+const vrButton =
+    VRButton.createButton(
+        renderer
+    );
+
+vrButton.style.display =
+    "none";
+
+document.body.appendChild(
+    vrButton
 );
 
-scene.add(light);
 
+/* ==================================================
+   CHECK VR SUPPORT
+================================================== */
 
-const sun =
-new THREE.DirectionalLight(
-0xffffff,
-3
-);
+const vrStatus =
+    document.getElementById(
+        "vrStatus"
+    );
 
-sun.position.set(
-20,30,10
-);
+if (
+    navigator.xr &&
+    navigator.xr.isSessionSupported
+) {
 
-sun.castShadow = true;
+    try {
 
-scene.add(sun);
+        const supported =
+            await navigator.xr.isSessionSupported(
+                "immersive-vr"
+            );
 
+        if (supported) {
 
-/* GROUND */
+            document.getElementById(
+                "vrButton"
+            ).style.display =
+                "block";
 
-const ground =
-new THREE.Mesh(
-new THREE.PlaneGeometry(
-300,300
-),
-new THREE.MeshStandardMaterial({
-color:0x172019
-})
-);
+            vrStatus.textContent =
+                "🥽 VR detected — immersive mode available.";
 
-ground.rotation.x =
--Math.PI/2;
+        } else {
 
-scene.add(ground);
+            vrStatus.textContent =
+                "📱 3D mode available. A compatible WebXR device is required for immersive VR.";
 
+        }
 
-/* ROAD */
+    } catch {
 
-const road =
-new THREE.Mesh(
-new THREE.PlaneGeometry(
-14,220
-),
-new THREE.MeshStandardMaterial({
-color:0x171a20
-})
-);
+        vrStatus.textContent =
+            "📱 3D mode available.";
 
-road.rotation.x =
--Math.PI/2;
+    }
 
-road.position.y =
-0.01;
+} else {
 
-road.position.z =
--80;
-
-scene.add(road);
-
-
-/* ROAD MARKINGS */
-
-for(
-let z=20;
-z>-200;
-z-=8
-){
-
-const line =
-new THREE.Mesh(
-new THREE.BoxGeometry(
-0.25,0.03,4
-),
-new THREE.MeshStandardMaterial({
-color:0xffffff
-})
-);
-
-line.position.set(
-0,0.04,z
-);
-
-scene.add(line);
+    vrStatus.textContent =
+        "📱 3D mode available. WebXR is not available on this device.";
 
 }
 
 
-/* CAR */
+/* ==================================================
+   LIGHTING
+================================================== */
+
+const hemisphere =
+    new THREE.HemisphereLight(
+        0xffffff,
+        0x223344,
+        2
+    );
+
+scene.add(
+    hemisphere
+);
+
+
+const sun =
+    new THREE.DirectionalLight(
+        0xffffff,
+        3
+    );
+
+sun.position.set(
+    20,
+    30,
+    10
+);
+
+scene.add(
+    sun
+);
+
+
+/* ==================================================
+   GROUND
+================================================== */
+
+const ground =
+    new THREE.Mesh(
+        new THREE.PlaneGeometry(
+            300,
+            300
+        ),
+        new THREE.MeshStandardMaterial({
+            color:0x172019
+        })
+    );
+
+ground.rotation.x =
+    -Math.PI / 2;
+
+scene.add(
+    ground
+);
+
+
+/* ==================================================
+   ROAD
+================================================== */
+
+const road =
+    new THREE.Mesh(
+        new THREE.PlaneGeometry(
+            14,
+            240
+        ),
+        new THREE.MeshStandardMaterial({
+            color:0x171a20
+        })
+    );
+
+road.rotation.x =
+    -Math.PI / 2;
+
+road.position.set(
+    0,
+    .01,
+    -80
+);
+
+scene.add(
+    road
+);
+
+
+/* ==================================================
+   ROAD MARKINGS
+================================================== */
+
+for(
+    let z = 20;
+    z > -210;
+    z -= 8
+){
+
+    const line =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                .25,
+                .03,
+                4
+            ),
+            new THREE.MeshStandardMaterial({
+                color:0xffffff
+            })
+        );
+
+    line.position.set(
+        0,
+        .04,
+        z
+    );
+
+    scene.add(
+        line
+    );
+}
+
+
+/* ==================================================
+   CAR
+================================================== */
 
 const car =
-new THREE.Group();
+    new THREE.Group();
 
 
 const body =
-new THREE.Mesh(
-new THREE.BoxGeometry(
-2.4,0.7,4
-),
-new THREE.MeshStandardMaterial({
-color:0x1677ff,
-metalness:0.4,
-roughness:0.35
-})
-);
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            2.4,
+            .7,
+            4
+        ),
+        new THREE.MeshStandardMaterial({
+            color:0x1677ff,
+            metalness:.4,
+            roughness:.35
+        })
+    );
 
 body.position.y =
-0.75;
+    .75;
 
-car.add(body);
+car.add(
+    body
+);
 
 
 const cabin =
-new THREE.Mesh(
-new THREE.BoxGeometry(
-1.7,0.65,1.8
-),
-new THREE.MeshStandardMaterial({
-color:0x8fd3ff,
-transparent:true,
-opacity:0.75
-})
-);
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            1.7,
+            .65,
+            1.8
+        ),
+        new THREE.MeshStandardMaterial({
+            color:0x8fd3ff,
+            transparent:true,
+            opacity:.75
+        })
+    );
 
 cabin.position.set(
-0,1.35,-0.25
+    0,
+    1.35,
+    -.25
 );
 
-car.add(cabin);
+car.add(
+    cabin
+);
 
 
 /* WHEELS */
 
 const wheelGeometry =
-new THREE.CylinderGeometry(
-0.45,
-0.45,
-0.35,
-24
-);
+    new THREE.CylinderGeometry(
+        .45,
+        .45,
+        .35,
+        24
+    );
 
 const wheelMaterial =
-new THREE.MeshStandardMaterial({
-color:0x080808
-});
+    new THREE.MeshStandardMaterial({
+        color:0x080808
+    });
+
 
 [
-[-1.25,0.45,1.25],
-[1.25,0.45,1.25],
-[-1.25,0.45,-1.25],
-[1.25,0.45,-1.25]
-].forEach(p=>{
+    [-1.25,.45,1.25],
+    [1.25,.45,1.25],
+    [-1.25,.45,-1.25],
+    [1.25,.45,-1.25]
+].forEach(
+    p => {
 
-const wheel =
-new THREE.Mesh(
-wheelGeometry,
-wheelMaterial
+        const wheel =
+            new THREE.Mesh(
+                wheelGeometry,
+                wheelMaterial
+            );
+
+        wheel.rotation.z =
+            Math.PI / 2;
+
+        wheel.position.set(
+            p[0],
+            p[1],
+            p[2]
+        );
+
+        car.add(
+            wheel
+        );
+
+    }
 );
-
-wheel.rotation.z =
-Math.PI/2;
-
-wheel.position.set(
-p[0],p[1],p[2]
-);
-
-car.add(wheel);
-
-});
 
 
 car.position.set(
-0,0,10
+    0,
+    0,
+    10
 );
 
-scene.add(car);
+scene.add(
+    car
+);
 
 
-/* CHECKPOINT */
+/* ==================================================
+   CHECKPOINT
+================================================== */
 
 const checkpoint =
-new THREE.Group();
+    new THREE.Group();
+
+
+const checkpointMaterial =
+    new THREE.MeshStandardMaterial({
+        color:0xffff00,
+        emissive:0x665500
+    });
 
 
 const ring =
-new THREE.Mesh(
-new THREE.TorusGeometry(
-5,0.25,16,64
-),
-new THREE.MeshStandardMaterial({
-color:0xffff00,
-emissive:0x665500
-})
-);
+    new THREE.Mesh(
+        new THREE.TorusGeometry(
+            5,
+            .25,
+            16,
+            64
+        ),
+        checkpointMaterial
+    );
 
 ring.rotation.y =
-Math.PI/2;
+    Math.PI / 2;
 
 ring.position.y =
-4;
+    4;
 
-checkpoint.add(ring);
-
-
-[-5,5].forEach(x=>{
-
-const pillar =
-new THREE.Mesh(
-new THREE.BoxGeometry(
-0.4,8,0.4
-),
-new THREE.MeshStandardMaterial({
-color:0xffff00,
-emissive:0x665500
-})
+checkpoint.add(
+    ring
 );
 
-pillar.position.set(
-x,4,0
+
+[-5,5].forEach(
+    x => {
+
+        const pillar =
+            new THREE.Mesh(
+                new THREE.BoxGeometry(
+                    .4,
+                    8,
+                    .4
+                ),
+                checkpointMaterial
+            );
+
+        pillar.position.set(
+            x,
+            4,
+            0
+        );
+
+        checkpoint.add(
+            pillar
+        );
+
+    }
 );
-
-checkpoint.add(pillar);
-
-});
 
 
 checkpoint.position.z =
--100;
+    -100;
 
-scene.add(checkpoint);
-
-
-/* TREES */
-
-function tree(x,z){
-
-const group =
-new THREE.Group();
-
-
-const trunk =
-new THREE.Mesh(
-new THREE.CylinderGeometry(
-0.3,0.45,3,12
-),
-new THREE.MeshStandardMaterial({
-color:0x68452d
-})
+scene.add(
+    checkpoint
 );
 
-trunk.position.y =
-1.5;
 
-group.add(trunk);
+/* ==================================================
+   ENVIRONMENT
+================================================== */
+
+function createTree(
+    x,
+    z
+){
+
+    const tree =
+        new THREE.Group();
 
 
-const leaves =
-new THREE.Mesh(
-new THREE.SphereGeometry(
-1.7,16,16
-),
-new THREE.MeshStandardMaterial({
-color:0x237a3a
-})
-);
+    const trunk =
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                .3,
+                .45,
+                3,
+                12
+            ),
+            new THREE.MeshStandardMaterial({
+                color:0x68452d
+            })
+        );
 
-leaves.position.y =
-3.5;
+    trunk.position.y =
+        1.5;
 
-group.add(leaves);
+    tree.add(
+        trunk
+    );
 
-group.position.set(
-x,0,z
-);
 
-scene.add(group);
+    const leaves =
+        new THREE.Mesh(
+            new THREE.SphereGeometry(
+                1.7,
+                16,
+                16
+            ),
+            new THREE.MeshStandardMaterial({
+                color:0x237a3a
+            })
+        );
 
+    leaves.position.y =
+        3.5;
+
+    tree.add(
+        leaves
+    );
+
+
+    tree.position.set(
+        x,
+        0,
+        z
+    );
+
+    scene.add(
+        tree
+    );
 }
 
 
 for(
-let z=15;
-z>-190;
-z-=15
+    let z = 15;
+    z > -210;
+    z -= 15
 ){
 
-tree(-11,z);
-tree(11,z-6);
+    createTree(
+        -11,
+        z
+    );
 
+    createTree(
+        11,
+        z - 6
+    );
 }
 
 
-/* GAME */
+/* ==================================================
+   EXPERIENCE VARIABLES
+================================================== */
 
 let speed = 0;
+
 let acceleration = 5;
+
 let running = false;
-let lastTime = performance.now();
+
+let lastTime =
+    performance.now();
 
 
-const slider =
-document.getElementById(
-"acceleration"
-);
+/* ==================================================
+   UI
+================================================== */
+
+const goalInput =
+    document.getElementById(
+        "goalInput"
+    );
+
+const experienceButton =
+    document.getElementById(
+        "experienceButton"
+    );
+
+const panel =
+    document.getElementById(
+        "panel"
+    );
+
+const missionTitle =
+    document.getElementById(
+        "missionTitle"
+    );
+
+const missionInfo =
+    document.getElementById(
+        "missionInfo"
+    );
+
+const intent =
+    document.getElementById(
+        "intent"
+    );
 
 const speedText =
-document.getElementById(
-"speed"
-);
+    document.getElementById(
+        "speed"
+    );
 
-const accText =
-document.getElementById(
-"acc"
-);
+const accelerationValue =
+    document.getElementById(
+        "accelerationValue"
+    );
+
+const accelerationSlider =
+    document.getElementById(
+        "acceleration"
+    );
+
+const startButton =
+    document.getElementById(
+        "startButton"
+    );
 
 const message =
-document.getElementById(
-"message"
+    document.getElementById(
+        "message"
+    );
+
+
+/* ==================================================
+   LOCAL EXPERIENCE ENGINE
+================================================== */
+
+function understandGoal(
+    text
+){
+
+    const t =
+        text.toLowerCase();
+
+    if(
+        t.includes("motion") ||
+        t.includes("speed") ||
+        t.includes("velocity") ||
+        t.includes("acceleration") ||
+        t.includes("force")
+    ){
+
+        return {
+            subject:"Physics",
+            experience:"3D Motion Simulation",
+            mission:"Master Motion",
+            description:
+            "You are inside a virtual motion environment. Experiment with acceleration and observe how motion changes."
+        };
+
+    }
+
+
+    if(
+        t.includes("biology") ||
+        t.includes("cell") ||
+        t.includes("plant") ||
+        t.includes("photosynthesis")
+    ){
+
+        return {
+            subject:"Biology",
+            experience:"Virtual Biology World",
+            mission:"Explore Life",
+            description:
+            "You have entered a virtual biology environment. This world will eventually let you explore living systems from the inside."
+        };
+
+    }
+
+
+    if(
+        t.includes("math") ||
+        t.includes("algebra") ||
+        t.includes("geometry") ||
+        t.includes("triangle")
+    ){
+
+        return {
+            subject:"Mathematics",
+            experience:"Interactive Math World",
+            mission:"Solve the World",
+            description:
+            "Mathematics becomes a spatial challenge. Explore relationships and solve problems through interaction."
+        };
+
+    }
+
+
+    if(
+        t.includes("speaking") ||
+        t.includes("communication") ||
+        t.includes("presentation")
+    ){
+
+        return {
+            subject:"Communication",
+            experience:"Virtual Speaking Arena",
+            mission:"Master Communication",
+            description:
+            "You will eventually enter a simulated social environment where characters respond to your communication choices."
+        };
+
+    }
+
+
+    return {
+        subject:"General Skill",
+        experience:"Immersive Exploration",
+        mission:"Begin Your Journey",
+        description:
+        "LifeSkill OS has created an immersive learning environment for your goal. More specialized worlds will connect to this engine."
+    };
+}
+
+
+/* ==================================================
+   CREATE EXPERIENCE
+================================================== */
+
+experienceButton.addEventListener(
+    "click",
+    () => {
+
+        const text =
+            goalInput.value.trim();
+
+        if(!text){
+
+            alert(
+                "Tell LifeSkill OS what you want to learn."
+            );
+
+            return;
+        }
+
+
+        const result =
+            understandGoal(
+                text
+            );
+
+
+        panel.classList.remove(
+            "hidden"
+        );
+
+
+        missionTitle.textContent =
+            result.mission;
+
+
+        intent.textContent =
+            "🧠 " +
+            result.subject +
+            " • " +
+            result.experience;
+
+
+        missionInfo.textContent =
+            result.description;
+
+
+        message.textContent =
+            "🌍 Experience created. Look around and interact with the world.";
+
+
+        startButton.textContent =
+            "🚀 ENTER EXPERIENCE";
+
+    }
 );
 
-const start =
-document.getElementById(
-"start"
+
+/* ==================================================
+   ACCELERATION
+================================================== */
+
+accelerationSlider.addEventListener(
+    "input",
+    () => {
+
+        acceleration =
+            Number(
+                accelerationSlider.value
+            );
+
+        accelerationValue.textContent =
+            acceleration.toFixed(1);
+
+    }
 );
 
 
-slider.addEventListener(
-"input",
-function(){
+/* ==================================================
+   START
+================================================== */
 
-acceleration =
-Number(slider.value);
+startButton.addEventListener(
+    "click",
+    () => {
 
-accText.textContent =
-acceleration.toFixed(1);
+        running = true;
 
-});
+        speed = 0;
 
+        car.position.z =
+            10;
 
-start.addEventListener(
-"click",
-function(){
+        message.textContent =
+            "🚀 You are inside the simulation. Experiment and discover what changes.";
 
-running = true;
+        startButton.textContent =
+            "🔄 RESTART EXPERIENCE";
 
-speed = 0;
-
-car.position.z = 10;
-
-message.textContent =
-"🚀 Mission started! Watch how changing acceleration changes the vehicle's motion.";
-
-start.textContent =
-"🔄 RESTART MISSION";
-
-});
+    }
+);
 
 
-/* ANIMATION */
+/* ==================================================
+   VR ENTER BUTTON
+================================================== */
+
+document.getElementById(
+    "vrButton"
+).addEventListener(
+    "click",
+    () => {
+
+        if(
+            renderer.xr &&
+            renderer.xr.isPresenting === false
+        ){
+
+            const button =
+                document.querySelector(
+                    ".webxr-button"
+                );
+
+            if(button){
+                button.click();
+            }
+
+        }
+
+    }
+);
+
+
+/* ==================================================
+   ANIMATION
+================================================== */
 
 function animate(){
 
-requestAnimationFrame(
-animate
-);
+    const now =
+        performance.now();
 
-const now =
-performance.now();
+    const delta =
+        Math.min(
+            (now-lastTime)/1000,
+            .05
+        );
 
-const delta =
-Math.min(
-(now-lastTime)/1000,
-0.05
-);
-
-lastTime = now;
+    lastTime =
+        now;
 
 
-if(running){
+    if(running){
 
-speed +=
-acceleration*delta;
+        speed +=
+            acceleration *
+            delta;
 
-speed =
-Math.min(
-speed,
-30
-);
+        speed =
+            Math.min(
+                speed,
+                30
+            );
 
-car.position.z -=
-speed*delta;
+        car.position.z -=
+            speed *
+            delta;
 
-speedText.textContent =
-speed.toFixed(1);
-
-
-if(car.position.z <= -95){
-
-running = false;
-
-message.textContent =
-"🏆 Mission complete! You discovered how acceleration changes motion.";
-
-}
-
-}
+        speedText.textContent =
+            speed.toFixed(1);
 
 
-/* FOLLOW CAMERA */
+        if(
+            car.position.z <= -95
+        ){
 
-camera.position.z +=
-(
-car.position.z + 12 -
-camera.position.z
-)*0.04;
+            running = false;
 
-camera.lookAt(
-car.position.x,
-1,
-car.position.z-15
-);
+            message.textContent =
+                "🏆 Experience complete. You discovered how acceleration affects motion.";
 
+        }
 
-renderer.render(
-scene,
-camera
-);
-
-}
+    }
 
 
-animate();
+    /*
+       Desktop camera follows the vehicle.
+       In VR, the headset controls the camera.
+    */
+
+    if(
+        !renderer.xr.isPresenting
+    ){
+
+        camera.position.z +=
+            (
+                car.position.z +
+                12 -
+                camera.position.z
+            ) * .04;
+
+        camera.lookAt(
+            car.position.x,
+            1,
+            car.position.z - 15
+        );
+
+    }
 
 
-/* REMOVE LOADING */
-
-document.getElementById(
-"loading"
-).style.display =
-"none";
-
-
-/* RESIZE */
-
-window.addEventListener(
-"resize",
-function(){
-
-camera.aspect =
-window.innerWidth /
-window.innerHeight;
-
-camera.updateProjectionMatrix();
-
-renderer.setSize(
-window.innerWidth,
-window.innerHeight
-);
-
-});
-
-});
-
-</script>
-
-</body>
-</html>
+  
